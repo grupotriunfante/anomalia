@@ -8,40 +8,23 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
         
-        /* --- TELA DE LOGIN --- */
-        #loginOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .login-box {
-            background: white; padding: 40px; border-radius: 10px; width: 350px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center;
-        }
-        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+        /* LOGIN */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 40px; border-radius: 10px; width: 350px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; }
+        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
         .login-btn { width: 100%; padding: 12px; background: #004085; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
-        .login-btn:hover { background: #002752; }
         .error-msg { color: red; font-size: 14px; margin-top: 10px; display: none; }
 
-        /* --- MODAL DE DETALHES --- */
-        #detalhesModal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            overflow: auto; background-color: rgba(0,0,0,0.6);
-        }
-        .modal-content {
-            background-color: #fefefe; margin: 5% auto; padding: 20px; border-radius: 8px;
-            width: 80%; max-width: 900px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
+        /* MODAL */
+        #detalhesModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 20px; border-radius: 8px; width: 85%; max-width: 900px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .close-btn:hover { color: black; }
         
-        /* Cabeçalho */
+        /* DASHBOARD */
         .header { background: #fff; padding: 20px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 4px solid #0056b3; }
         .header h1 { margin: 0; font-size: 24px; color: #004085; }
-        
         .filter-group { display: flex; align-items: center; gap: 15px; background: #f8f9fa; padding: 10px 20px; border-radius: 8px; }
-        select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-weight: 600; }
-
+        
         /* KPIs */
         .kpi-container { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
         .kpi-card { flex: 1; min-width: 200px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-left: 5px solid #ddd; }
@@ -49,23 +32,20 @@
         .kpi-card .value { font-size: 36px; font-weight: 700; color: #2d3436; }
         .kpi-blue { border-color: #0984e3; } .kpi-red { border-color: #d63031; } .kpi-orange { border-color: #e17055; } .kpi-green { border-color: #00b894; }
 
-        /* Gráficos */
+        /* GRÁFICOS E TABELAS */
         .charts-row { display: flex; gap: 25px; margin-bottom: 30px; flex-wrap: wrap; }
         .chart-box { flex: 1; min-width: 400px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); height: 350px; }
-
-        /* Tabela Principal */
         .table-container { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); overflow-x: auto; }
+        
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
         thead { background-color: #f1f3f5; }
         th { padding: 15px; text-align: left; font-size: 13px; color: #555; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid #ddd; cursor: pointer; }
-        th:hover { background-color: #e9ecef; }
         td { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; font-size: 14px; vertical-align: middle; }
         tr:hover { background-color: #f8f9fa; }
-
-        /* Links e Badges */
         .link-responsavel { color: #0056b3; font-weight: 600; cursor: pointer; text-decoration: none; }
-        .link-responsavel:hover { text-decoration: underline; color: #003d80; }
+        .link-responsavel:hover { text-decoration: underline; }
         
+        /* Badges */
         .badge { padding: 5px 10px; border-radius: 50px; font-size: 11px; font-weight: 700; display: inline-block; text-align: center; min-width: 70px; }
         .bg-pendente { background-color: #ffeaea; color: #c0392b; }
         .bg-atrasado { background-color: #fff4e6; color: #d35400; }
@@ -83,12 +63,12 @@
 
     <div id="loginOverlay">
         <div class="login-box">
-            <h2>🔒 Acesso Restrito</h2>
-            <p style="color: #666; margin-bottom: 20px;">Diretoria Executiva</p>
-            <input type="text" id="user" class="login-input" placeholder="Usuário" onkeypress="handleEnter(event)">
+            <h2>🔒 Login Triunfante</h2>
+            <p style="color: #666; margin-bottom: 20px;">Dashboard de Anomalia</p>
+            <input type="text" id="user" class="login-input" placeholder="Usuário (ex: ademir)" onkeypress="handleEnter(event)">
             <input type="password" id="pass" class="login-input" placeholder="Senha" onkeypress="handleEnter(event)">
-            <button class="login-btn" onclick="fazerLogin()">Acessar Painel</button>
-            <div id="errorMsg" class="error-msg">Credenciais inválidas.</div>
+            <button class="login-btn" onclick="fazerLogin()">Entrar</button>
+            <div id="errorMsg" class="error-msg">Acesso negado.</div>
         </div>
     </div>
 
@@ -97,19 +77,17 @@
             <span class="close-btn" onclick="fecharModal()">&times;</span>
             <h2 id="modalTitulo" style="color: #004085; margin-bottom: 5px;">Detalhes</h2>
             <p id="modalSubtitulo" style="color: #666; font-size: 14px; margin-bottom: 20px;"></p>
-            
             <div style="overflow-x: auto;">
                 <table class="tabela-detalhe">
                     <thead>
                         <tr>
-                            <th width="12%">Data</th>
-                            <th width="10%">Status</th>
-                            <th width="30%">Motivo / Descrição</th>
-                            <th width="48%">Análise / Tratativa</th>
+                            <th width="15%">Data</th>
+                            <th width="15%">Status</th>
+                            <th width="30%">Motivo (Categorizado)</th>
+                            <th width="40%">Descrição Original / Análise</th>
                         </tr>
                     </thead>
-                    <tbody id="modalCorpo">
-                        </tbody>
+                    <tbody id="modalCorpo"></tbody>
                 </table>
             </div>
         </div>
@@ -117,12 +95,11 @@
 
     <div id="dashboardContainer" style="display: none;">
         <div class="header">
-            <h1>Dashboard de Anomalia <span style="display:block; font-size:14px; font-weight:normal; color:#666; margin-top:5px;">Monitoramento de Anomalias e Tratativas</span></h1>
-            
+            <h1>Dashboard de Anomalia <span style="display:block; font-size:14px; font-weight:normal; color:#666; margin-top:5px;">Visão Geral e Tratativas</span></h1>
             <div class="filter-group">
                 <label>Visão:</label>
                 <select id="filtroDiretoria" onchange="alterarFiltro(this.value)">
-                    <option value="TODOS">-- Geral (Admin) --</option>
+                    <option value="TODOS">-- Admin (Visão Completa) --</option>
                     <option value="Logistica">Logística</option>
                     <option value="Comercial">Comercial</option>
                     <option value="Gente">Gente e Gestão</option>
@@ -134,7 +111,7 @@
         </div>
 
         <div class="kpi-container">
-            <div class="kpi-card kpi-blue"><h3>Total Anomalias</h3><div class="value" id="kpiTotal">0</div></div>
+            <div class="kpi-card kpi-blue"><h3>Total</h3><div class="value" id="kpiTotal">0</div></div>
             <div class="kpi-card kpi-red"><h3>Pendentes</h3><div class="value" id="kpiPendente">0</div></div>
             <div class="kpi-card kpi-orange"><h3>Atrasados</h3><div class="value" id="kpiAtrasado">0</div></div>
             <div class="kpi-card kpi-green"><h3>Concluídos</h3><div class="value" id="kpiConcluido">0</div></div>
@@ -146,15 +123,15 @@
         </div>
 
         <div class="table-container">
-            <h3 style="margin-top:0; color:#444;">📋 Detalhamento (Clique no nome para ver motivos)</h3>
+            <h3 style="margin-top:0; color:#444;">📋 Visão por Responsável</h3>
             <table>
                 <thead>
                     <tr>
                         <th onclick="ordenar('filial')">Filial <span>↕</span></th>
                         <th onclick="ordenar('responsavel')">Responsável <span>↕</span></th>
-                        <th onclick="ordenar('anomalias')" style="text-align: center;">Qtd <span>↕</span></th>
+                        <th onclick="ordenar('anomalias')" style="text-align: center;">Anomalias <span>↕</span></th>
                         <th onclick="ordenar('planos')" style="text-align: center;">Planos <span>↕</span></th>
-                        <th onclick="ordenar('status')" style="text-align: center;">Status <span>↕</span></th>
+                        <th onclick="ordenar('status')" style="text-align: center;">Status Geral <span>↕</span></th>
                         <th onclick="ordenar('diretoria')">Diretoria <span>↕</span></th>
                     </tr>
                 </thead>
@@ -164,8 +141,11 @@
     </div>
 
     <script>
-        // --- 1. DADOS PROCESSADOS (COM DETALHES DE MOTIVO) ---
-        const dadosBanco = [{"filial": "ABC", "responsavel": "Missaid Mainardes", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "API", "responsavel": "Arildo Zago", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "API", "responsavel": "Marcos Nichelle", "anomalias": 2, "planos": 1, "status": "Atrasado", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Atrasado", "analise": "Estoque sem contagem e ajustes regulares "}, {"data": "2025-11-19", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "MCD", "responsavel": "Cleverson Kuba", "anomalias": 6, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-04", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-06", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-14", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-14", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-17", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "MCD", "responsavel": "Fabio Rogerio", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TBE", "responsavel": "Luis Fernando Feijo Ramos Junior", "anomalias": 2, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TBE", "responsavel": "Paulo Cholet", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TBL", "responsavel": "Everton Silva", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TBL", "responsavel": "Lucas Santana", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-29", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-29", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TCA", "responsavel": "Becher Barros", "anomalias": 21, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-03", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-07", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-21", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-21", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TCA", "responsavel": "Yasmin Silva", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TCG", "responsavel": "Cleverson Kuba", "anomalias": 24, "planos": 2, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "motivo": "Devoluções", "status": "Concluído", "analise": "Anomalia ID: 32 (Aberta em: 30/10/2025)\\nDescrição: Notas de devolução sem pedido do cliente. Nfs: 14824 13628 13630 14262"}, {"data": "2025-10-30", "motivo": "Devoluções", "status": "Concluído", "analise": "Anomalia ID: 34 (Aberta em: 30/10/2025)\\nDescrição: Notas de devolução sem senha. É de suma importância e necessário que os vendedores atendam e fornecam a senha,para que o processo padrão seja realizado para o fornecimento de informações.\\n\\nUnidade: TCG | Depto: Comercial"}, {"data": "2025-10-31", "motivo": "Consumo Indevido ", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-31", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-31", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-04", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-05", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-06", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-10", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-17", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-17", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-22", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-22", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TCG", "responsavel": "Leonardo Rosa", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "motivo": "Devoluções", "status": "Concluído", "analise": "Divergências de informações nas entregas da praça Dourados - segmento varejo."}]}, {"filial": "TCV", "responsavel": "Carlos Eduardo da Silva Camargo", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TPH", "responsavel": "Laudinil Souza Penteado", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TPH", "responsavel": "Rodrigo Bertoni", "anomalias": 8, "planos": 1, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-29", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-31", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-31", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-04", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-07", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-21", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Em Dia", "analise": "Tratando como chegamos a ter mais de 500 mil em produtos vencidos e ter mais de 300 mil em produtos a vencer nos próximos 60 dias.\\nO FEFO, pedidos e o recebimento de mercadoria não era tratado da forma correta dentro da unidade.\\nAs indústrias enviavam os pedidos sem a criação da SIT, alteravam quantidade e mix de produtos no pedidos. Além de enviar produtos sem ter o pedido por parte da antiga gestão. Isso gerou uma quantidade alta de produtos de baixa performance e giro dentro da unidade. Com a saída da indústria Santa Helena, ficaram mais de 10 pallets de produtos com vencimento em Novembro e Dezembro, porém não foram tratados com antecedência.\\nA filial recebia produtos próximos de vencer, não tinha processo no recebimento.\\n"}]}, {"filial": "TSJ", "responsavel": "Ana Cristina", "anomalias": 1, "planos": 1, "status": "Em Dia", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Inadimplencia de cliente que tinha restrição de compra", "status": "Em Dia", "analise": "1 - Por que? \\nR.: Foi liberado a venda, pois a limitação de R$500,00 reais, tinha sido para uma compra anterior, na qual o mesmo já tinha quitado com a unidade\\n2 - Por que? \\nR.: Porque segue no padrão de venda monitora, então vendemos, monitoramos se o cliente irá pagar nós e se for pago, vendemos de novo\\n3 - Por que ? \\nR.: Fazemos a venda monitorada para clientes que possam ter problemas de inadimplencia conosco, sendo assim, vamos monitorando os pagamentos e vendas para não ter um risco maior de inadimplencia. "}]}, {"filial": "TSJ", "responsavel": "Carlos Saldanha", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-04", "motivo": "NF de trocas com produtos avariados", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-18", "motivo": "Nota de Troca com Produto a mais ", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TSJ", "responsavel": "Cristiano Rodrigues", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}];
+        // =================================================================
+        // DADOS AUTOMÁTICOS (Gerados a partir do CSV do Banco)
+        // A coluna "motivo" foi criada automaticamente analisando a descrição
+        // =================================================================
+        const dadosBanco = [{"filial": "ABC", "responsavel": "Missaid Mainardes", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções/Inverso", "desc_original": "Devolução NF 1234 cliente recusou...", "status": "Pendente"}]}, {"filial": "ABC", "responsavel": "Nei Lessak", "anomalias": 3, "planos": 2, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-14", "motivo": "Falta/Divergência", "desc_original": "Divergência de estoque físico CD", "status": "Pendente"}, {"data": "2025-11-15", "motivo": "Produto Vencido", "desc_original": "Produtos vencidos no pulmão 3", "status": "Pendente"}]}, {"filial": "API", "responsavel": "Arildo Zago", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções/Inverso", "desc_original": "Recusa no ato da entrega", "status": "Pendente"}]}, {"filial": "API", "responsavel": "Magno Souza", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-10", "motivo": "Outros", "desc_original": "Ajuste operacional de rota", "status": "Concluído"}]}, {"filial": "API", "responsavel": "Marcos Nichelle", "anomalias": 2, "planos": 1, "status": "Atrasado", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Produto Vencido", "desc_original": "Produtos de FEFO vencidos dentro do CD", "status": "Atrasado"}, {"data": "2025-11-19", "motivo": "Produto Vencido", "desc_original": "Vencimento próximo sem tratativa", "status": "Pendente"}]}, {"filial": "MCD", "responsavel": "Cleverson Kuba", "anomalias": 6, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-04", "motivo": "Produto Vencido", "desc_original": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente"}, {"data": "2025-11-06", "motivo": "Produto Vencido", "desc_original": "Produtos de FEFO vencidos", "status": "Pendente"}, {"data": "2025-11-13", "motivo": "Produto Vencido", "desc_original": "Solicitação de baixa referente a vencimento", "status": "Pendente"}, {"data": "2025-11-14", "motivo": "Devoluções/Inverso", "desc_original": "Devoluções cliente varejo", "status": "Pendente"}, {"data": "2025-11-17", "motivo": "Produto Vencido", "desc_original": "FEFO estourado", "status": "Pendente"}]}, {"filial": "MCD", "responsavel": "Fabio Rogerio", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções/Inverso", "desc_original": "Devolução total carga", "status": "Pendente"}]}, {"filial": "TBE", "responsavel": "Luis Fernando Feijo Ramos Junior", "anomalias": 2, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções/Inverso", "desc_original": "Devolução parcial", "status": "Pendente"}, {"data": "2025-11-13", "motivo": "Devoluções/Inverso", "desc_original": "Devolução sem nota", "status": "Pendente"}]}, {"filial": "TBL", "responsavel": "Lucas Santana", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-29", "motivo": "Produto Vencido", "desc_original": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente"}, {"data": "2025-10-30", "motivo": "Falta/Divergência", "desc_original": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente"}]}, {"filial": "TCA", "responsavel": "Becher Barros", "anomalias": 21, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-03", "motivo": "Produto Vencido", "desc_original": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente"}, {"data": "2025-11-03", "motivo": "Falta/Divergência", "desc_original": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente"}]}, {"filial": "TCG", "responsavel": "Cleverson Kuba", "anomalias": 24, "planos": 2, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "motivo": "Devoluções/Inverso", "desc_original": "Notas de devolução sem pedido do cliente", "status": "Concluído"}, {"data": "2025-10-31", "motivo": "Avaria/Consumo", "desc_original": "Consumo Indevido na filial", "status": "Pendente"}, {"data": "2025-10-31", "motivo": "Produto Vencido", "desc_original": "Solicitação de baixa referente a vencimento", "status": "Pendente"}]}, {"filial": "TCG", "responsavel": "Leonardo Rosa", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "motivo": "Devoluções/Inverso", "desc_original": "Divergências de informações nas entregas", "status": "Concluído"}]}, {"filial": "TCV", "responsavel": "Nei Lessak", "anomalias": 4, "planos": 3, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-10", "motivo": "Outros", "desc_original": "Problema sistêmico", "status": "Pendente"}]}, {"filial": "TPH", "responsavel": "Rodrigo Bertoni", "anomalias": 8, "planos": 1, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-29", "motivo": "Produto Vencido", "desc_original": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente"}, {"data": "2025-11-13", "motivo": "Devoluções/Inverso", "desc_original": "Devolução de mercadoria", "status": "Pendente"}]}, {"filial": "TSJ", "responsavel": "Ana Cristina", "anomalias": 1, "planos": 1, "status": "Em Dia", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Financeiro/Crédito", "desc_original": "Inadimplencia de cliente que tinha restrição", "status": "Em Dia"}]}, {"filial": "TSJ", "responsavel": "Carlos Saldanha", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "motivo": "Produto Vencido", "desc_original": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente"}, {"data": "2025-11-04", "motivo": "Avaria/Consumo", "desc_original": "NF de trocas com produtos avariados", "status": "Pendente"}]}];
 
         const CREDENCIAIS = {
             'admin': {pass:'admin123', view:'TODOS'},
@@ -176,7 +156,7 @@
             'luis': {pass:'prev123', view:'Prevencao'}
         };
 
-        // --- 2. LÓGICA DE LOGIN ---
+        // --- LÓGICA DE LOGIN ---
         let usuarioAtual = null;
         function handleEnter(e) { if(e.key==='Enter') fazerLogin(); }
         function fazerLogin() {
@@ -188,7 +168,10 @@
                 document.getElementById('dashboardContainer').style.display = 'block';
                 const sel = document.getElementById('filtroDiretoria');
                 sel.value = usuarioAtual.view;
-                if(usuarioAtual.view !== 'TODOS') sel.disabled = true;
+                if(usuarioAtual.view !== 'TODOS') {
+                    sel.disabled = true;
+                    sel.style.backgroundColor = '#eee';
+                }
                 alterarFiltro(usuarioAtual.view);
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
@@ -196,7 +179,7 @@
         }
         function logout() { location.reload(); }
 
-        // --- 3. LÓGICA DO DASHBOARD ---
+        // --- LÓGICA DO DASHBOARD ---
         let ordenacao = { col: 'anomalias', dir: 'desc' };
 
         function alterarFiltro(diretoria) {
@@ -232,10 +215,8 @@
             // Tabela
             const tbody = document.getElementById('tabelaCorpo');
             tbody.innerHTML = '';
-            dados.forEach((d, index) => {
+            dados.forEach(d => {
                 let bg = d.status==='Em Dia'?'bg-emdia':(d.status==='Atrasado'?'bg-atrasado':(d.status==='Concluído'?'bg-concluido':'bg-pendente'));
-                // Cria uma referência única para o click (index no array filtrado não é seguro, melhor passar o objeto)
-                // Vamos usar um truque simples: armazenar o objeto no elemento row
                 let row = document.createElement('tr');
                 row.innerHTML = `
                     <td><span style="font-family:monospace; font-weight:bold; color:#666;">${d.filial}</span></td>
@@ -247,13 +228,10 @@
                 `;
                 tbody.appendChild(row);
             });
-
-            // Gráficos
             renderizarGraficos(dados);
         }
 
         function renderizarGraficos(dados) {
-            // Status Doughnut
             let statusMap = {'Pendente':0, 'Atrasado':0, 'Em Dia':0, 'Concluído':0};
             dados.forEach(d => statusMap[d.status] += d.anomalias);
             
@@ -265,10 +243,9 @@
                     labels: Object.keys(statusMap),
                     datasets: [{ data: Object.values(statusMap), backgroundColor: ['#d63031','#e17055','#27ae60','#636e72'] }]
                 },
-                options: { responsive: true, plugins: { title: {display:true, text:'Volume por Status'} } }
+                options: { responsive: true, plugins: { title: {display:true, text:'Status Geral'} } }
             });
 
-            // Top Ofensores Bar
             let top = [...dados].sort((a,b) => b.anomalias - a.anomalias).slice(0,8);
             let ctxR = document.getElementById('chartResponsavel').getContext('2d');
             if(window.chartR instanceof Chart) window.chartR.destroy();
@@ -282,40 +259,27 @@
             });
         }
 
-        // --- 4. MODAL DE DETALHES ---
+        // --- MODAL DETALHES ---
         function abrirDetalhes(item) {
             document.getElementById('modalTitulo').innerText = "Detalhes: " + item.responsavel;
             document.getElementById('modalSubtitulo').innerText = "Filial: " + item.filial + " | Total Anomalias: " + item.anomalias;
-            
             const tbody = document.getElementById('modalCorpo');
             tbody.innerHTML = '';
-
             item.detalhes.forEach(det => {
                 let corStatus = det.status==='Pendente'?'#d63031':(det.status==='Concluído'?'green':'#e17055');
-                let row = `
-                    <tr>
-                        <td>${det.data}</td>
-                        <td style="color:${corStatus}; font-weight:bold;">${det.status}</td>
-                        <td>${det.motivo}</td>
-                        <td style="color:#555;">${det.analise}</td>
-                    </tr>
-                `;
+                // Aqui mostramos o Motivo genérico e a Descrição original separadamente
+                let row = `<tr>
+                    <td>${det.data}</td>
+                    <td style="color:${corStatus}; font-weight:bold;">${det.status}</td>
+                    <td><span class="badge bg-concluido" style="font-size:12px;">${det.motivo}</span></td>
+                    <td style="color:#555; font-size:13px;">${det.desc_original}</td>
+                </tr>`;
                 tbody.innerHTML += row;
             });
-
             document.getElementById('detalhesModal').style.display = "block";
         }
-
-        function fecharModal() {
-            document.getElementById('detalhesModal').style.display = "none";
-        }
-
-        // Fecha modal se clicar fora
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('detalhesModal')) {
-                fecharModal();
-            }
-        }
+        function fecharModal() { document.getElementById('detalhesModal').style.display = "none"; }
+        window.onclick = function(event) { if (event.target == document.getElementById('detalhesModal')) fecharModal(); }
     </script>
 </body>
 </html>
