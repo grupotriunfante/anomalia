@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Executivo - Triunfante</title>
+    <title>Dashboard de Anomalia</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
@@ -18,70 +18,65 @@
             background: white; padding: 40px; border-radius: 10px; width: 350px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center;
         }
-        .login-box h2 { margin-top: 0; color: #004085; }
-        .login-input {
-            width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd;
-            border-radius: 5px; box-sizing: border-box; font-size: 16px;
-        }
-        .login-btn {
-            width: 100%; padding: 12px; background: #004085; color: white;
-            border: none; border-radius: 5px; font-size: 16px; cursor: pointer;
-            transition: background 0.3s;
-        }
+        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+        .login-btn { width: 100%; padding: 12px; background: #004085; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
         .login-btn:hover { background: #002752; }
         .error-msg { color: red; font-size: 14px; margin-top: 10px; display: none; }
 
-        /* --- DASHBOARD (Inicialmente Escondido) --- */
-        #dashboardContainer { display: none; }
-
+        /* --- MODAL DE DETALHES --- */
+        #detalhesModal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.6);
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 5% auto; padding: 20px; border-radius: 8px;
+            width: 80%; max-width: 900px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-btn:hover { color: black; }
+        
         /* Cabeçalho */
         .header { background: #fff; padding: 20px 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 4px solid #0056b3; }
-        .header h1 { margin: 0; font-size: 26px; color: #004085; }
-        .header h1 span { display: block; font-size: 14px; font-weight: normal; color: #666; margin-top: 5px; }
+        .header h1 { margin: 0; font-size: 24px; color: #004085; }
         
         .filter-group { display: flex; align-items: center; gap: 15px; background: #f8f9fa; padding: 10px 20px; border-radius: 8px; }
-        select { padding: 10px 15px; font-size: 15px; border-radius: 6px; border: 1px solid #ccc; background-color: #fff; cursor: pointer; font-weight: 600; }
+        select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-weight: 600; }
 
         /* KPIs */
         .kpi-container { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
-        .kpi-card { flex: 1; min-width: 200px; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: relative; overflow: hidden; }
-        .kpi-card::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 5px; }
-        .kpi-card h3 { margin: 0 0 10px; font-size: 14px; color: #888; text-transform: uppercase; font-weight: 700; }
-        .kpi-card .value { font-size: 42px; font-weight: 700; color: #2d3436; }
-        
-        .kpi-blue::before { background: #0984e3; }
-        .kpi-red::before { background: #d63031; } .kpi-red .value { color: #d63031; }
-        .kpi-green::before { background: #00b894; } .kpi-green .value { color: #00b894; }
-        .kpi-orange::before { background: #e17055; } .kpi-orange .value { color: #e17055; }
+        .kpi-card { flex: 1; min-width: 200px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-left: 5px solid #ddd; }
+        .kpi-card h3 { margin: 0 0 10px; font-size: 13px; color: #888; text-transform: uppercase; font-weight: 700; }
+        .kpi-card .value { font-size: 36px; font-weight: 700; color: #2d3436; }
+        .kpi-blue { border-color: #0984e3; } .kpi-red { border-color: #d63031; } .kpi-orange { border-color: #e17055; } .kpi-green { border-color: #00b894; }
 
         /* Gráficos */
         .charts-row { display: flex; gap: 25px; margin-bottom: 30px; flex-wrap: wrap; }
-        .chart-box { flex: 1; min-width: 450px; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); height: 400px; }
-        
-        /* Tabela Interativa */
-        .table-container { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow-x: auto; }
-        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        
+        .chart-box { flex: 1; min-width: 400px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); height: 350px; }
+
+        /* Tabela Principal */
+        .table-container { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); overflow-x: auto; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
         thead { background-color: #f1f3f5; }
-        
-        /* Cabeçalhos Clicáveis */
-        th { padding: 18px 15px; text-align: left; font-size: 13px; color: #555; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #ddd; cursor: pointer; user-select: none; transition: background 0.2s; }
-        th:hover { background-color: #e9ecef; color: #000; }
-        th span { margin-left: 5px; font-size: 10px; color: #999; }
-        
-        td { padding: 15px; border-bottom: 1px solid #f1f1f1; font-size: 14px; vertical-align: middle; }
+        th { padding: 15px; text-align: left; font-size: 13px; color: #555; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid #ddd; cursor: pointer; }
+        th:hover { background-color: #e9ecef; }
+        td { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; font-size: 14px; vertical-align: middle; }
         tr:hover { background-color: #f8f9fa; }
 
-        /* Badges */
-        .badge { padding: 6px 14px; border-radius: 50px; font-size: 12px; font-weight: 700; display: inline-block; text-align: center; min-width: 80px; }
+        /* Links e Badges */
+        .link-responsavel { color: #0056b3; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .link-responsavel:hover { text-decoration: underline; color: #003d80; }
+        
+        .badge { padding: 5px 10px; border-radius: 50px; font-size: 11px; font-weight: 700; display: inline-block; text-align: center; min-width: 70px; }
         .bg-pendente { background-color: #ffeaea; color: #c0392b; }
         .bg-atrasado { background-color: #fff4e6; color: #d35400; }
         .bg-emdia { background-color: #e3fcef; color: #27ae60; }
         .bg-concluido { background-color: #dfe6e9; color: #2d3436; }
-        
-        .responsavel-nome { font-weight: 600; color: #2c3e50; }
-        .filial-tag { font-family: monospace; background: #eee; padding: 4px 8px; border-radius: 4px; font-weight: bold; color: #555; }
+
+        /* Tabela Modal */
+        .tabela-detalhe { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .tabela-detalhe th { background: #004085; color: white; padding: 10px; font-size: 12px; }
+        .tabela-detalhe td { border: 1px solid #ddd; padding: 8px; font-size: 13px; }
+        .tabela-detalhe tr:nth-child(even) { background-color: #f2f2f2; }
     </style>
 </head>
 <body>
@@ -92,259 +87,165 @@
             <p style="color: #666; margin-bottom: 20px;">Diretoria Executiva</p>
             <input type="text" id="user" class="login-input" placeholder="Usuário" onkeypress="handleEnter(event)">
             <input type="password" id="pass" class="login-input" placeholder="Senha" onkeypress="handleEnter(event)">
-            <button class="login-btn" onclick="fazerLogin()">Entrar</button>
-            <div id="errorMsg" class="error-msg">Usuário ou senha inválidos.</div>
+            <button class="login-btn" onclick="fazerLogin()">Acessar Painel</button>
+            <div id="errorMsg" class="error-msg">Credenciais inválidas.</div>
         </div>
     </div>
 
-    <div id="dashboardContainer">
-        
+    <div id="detalhesModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="fecharModal()">&times;</span>
+            <h2 id="modalTitulo" style="color: #004085; margin-bottom: 5px;">Detalhes</h2>
+            <p id="modalSubtitulo" style="color: #666; font-size: 14px; margin-bottom: 20px;"></p>
+            
+            <div style="overflow-x: auto;">
+                <table class="tabela-detalhe">
+                    <thead>
+                        <tr>
+                            <th width="12%">Data</th>
+                            <th width="10%">Status</th>
+                            <th width="30%">Motivo / Descrição</th>
+                            <th width="48%">Análise / Tratativa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalCorpo">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboardContainer" style="display: none;">
         <div class="header">
-            <h1>
-                Dashboard de Anomalias
-                <span id="subtitulo">Monitoramento de Anomalias</span>
-            </h1>
+            <h1>Dashboard de Anomalia <span style="display:block; font-size:14px; font-weight:normal; color:#666; margin-top:5px;">Monitoramento de Anomalias e Tratativas</span></h1>
+            
             <div class="filter-group">
-                <label for="filtroDiretoria">Visão:</label>
+                <label>Visão:</label>
                 <select id="filtroDiretoria" onchange="alterarFiltro(this.value)">
-                    <option value="TODOS">-- Visão Geral (Admin) --</option>
-                    <option value="Logistica">Ademir Lobato (Logística)</option>
-                    <option value="Comercial">Saulo (Comercial)</option>
-                    <option value="Gente">Ana (Gente e Gestão)</option>
-                    <option value="Financeiro">Fagnes (Financeiro)</option>
-                    <option value="Prevencao">Luís (Prevenção)</option>
+                    <option value="TODOS">-- Geral (Admin) --</option>
+                    <option value="Logistica">Logística</option>
+                    <option value="Comercial">Comercial</option>
+                    <option value="Gente">Gente e Gestão</option>
+                    <option value="Financeiro">Financeiro</option>
+                    <option value="Prevencao">Prevenção</option>
                 </select>
-                <button onclick="logout()" style="padding: 10px; cursor:pointer; background: #ddd; border:none; border-radius: 6px;">Sair</button>
+                <button onclick="logout()" style="padding: 8px; cursor:pointer; background: #ddd; border:none; border-radius: 4px;">Sair</button>
             </div>
         </div>
 
         <div class="kpi-container">
-            <div class="kpi-card kpi-blue">
-                <h3>Total Anomalias</h3>
-                <div class="value" id="kpiTotal">0</div>
-            </div>
-            <div class="kpi-card kpi-red">
-                <h3>Pendentes</h3>
-                <div class="value" id="kpiPendente">0</div>
-            </div>
-            <div class="kpi-card kpi-orange">
-                <h3>Atrasados</h3>
-                <div class="value" id="kpiAtrasado">0</div>
-            </div>
-            <div class="kpi-card kpi-green">
-                <h3>Concluídos / Em Dia</h3>
-                <div class="value" id="kpiConcluido">0</div>
-            </div>
+            <div class="kpi-card kpi-blue"><h3>Total Anomalias</h3><div class="value" id="kpiTotal">0</div></div>
+            <div class="kpi-card kpi-red"><h3>Pendentes</h3><div class="value" id="kpiPendente">0</div></div>
+            <div class="kpi-card kpi-orange"><h3>Atrasados</h3><div class="value" id="kpiAtrasado">0</div></div>
+            <div class="kpi-card kpi-green"><h3>Concluídos</h3><div class="value" id="kpiConcluido">0</div></div>
         </div>
 
         <div class="charts-row">
-            <div class="chart-box">
-                <canvas id="chartStatus"></canvas>
-            </div>
-            <div class="chart-box">
-                <canvas id="chartResponsavel"></canvas>
-            </div>
+            <div class="chart-box"><canvas id="chartStatus"></canvas></div>
+            <div class="chart-box"><canvas id="chartResponsavel"></canvas></div>
         </div>
 
         <div class="table-container">
-            <div class="table-header">
-                <h3>📋 Detalhamento (Clique nas colunas para ordenar)</h3>
-            </div>
+            <h3 style="margin-top:0; color:#444;">📋 Detalhamento (Clique no nome para ver motivos)</h3>
             <table>
                 <thead>
                     <tr>
-                        <th onclick="ordenar('filial')">Filial <span id="seta-filial"></span></th>
-                        <th onclick="ordenar('responsavel')">Responsável <span id="seta-responsavel"></span></th>
-                        <th onclick="ordenar('anomalias')" style="text-align: center;">Anomalias <span id="seta-anomalias"></span></th>
-                        <th onclick="ordenar('planos')" style="text-align: center;">Planos <span id="seta-planos"></span></th>
-                        <th onclick="ordenar('status')" style="text-align: center;">Status Geral <span id="seta-status"></span></th>
-                        <th onclick="ordenar('diretoria')">Diretoria <span id="seta-diretoria"></span></th>
+                        <th onclick="ordenar('filial')">Filial <span>↕</span></th>
+                        <th onclick="ordenar('responsavel')">Responsável <span>↕</span></th>
+                        <th onclick="ordenar('anomalias')" style="text-align: center;">Qtd <span>↕</span></th>
+                        <th onclick="ordenar('planos')" style="text-align: center;">Planos <span>↕</span></th>
+                        <th onclick="ordenar('status')" style="text-align: center;">Status <span>↕</span></th>
+                        <th onclick="ordenar('diretoria')">Diretoria <span>↕</span></th>
                     </tr>
                 </thead>
-                <tbody id="tabelaCorpo">
-                    </tbody>
+                <tbody id="tabelaCorpo"></tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // =============================================================
-        // 1. DADOS DOS DIRETORES E CREDENCIAIS
-        // =============================================================
+        // --- 1. DADOS PROCESSADOS (COM DETALHES DE MOTIVO) ---
+        const dadosBanco = [{"filial": "ABC", "responsavel": "Missaid Mainardes", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "API", "responsavel": "Arildo Zago", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "API", "responsavel": "Marcos Nichelle", "anomalias": 2, "planos": 1, "status": "Atrasado", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Atrasado", "analise": "Estoque sem contagem e ajustes regulares "}, {"data": "2025-11-19", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "MCD", "responsavel": "Cleverson Kuba", "anomalias": 6, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-04", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-06", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-14", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-14", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-17", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "MCD", "responsavel": "Fabio Rogerio", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TBE", "responsavel": "Luis Fernando Feijo Ramos Junior", "anomalias": 2, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TBE", "responsavel": "Paulo Cholet", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TBL", "responsavel": "Everton Silva", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TBL", "responsavel": "Lucas Santana", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-29", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-29", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TCA", "responsavel": "Becher Barros", "anomalias": 21, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-03", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-07", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nata de Troca com Produtos Faltantes no Fisico", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-21", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-21", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TCA", "responsavel": "Yasmin Silva", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TCG", "responsavel": "Cleverson Kuba", "anomalias": 24, "planos": 2, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "motivo": "Devoluções", "status": "Concluído", "analise": "Anomalia ID: 32 (Aberta em: 30/10/2025)\\nDescrição: Notas de devolução sem pedido do cliente. Nfs: 14824 13628 13630 14262"}, {"data": "2025-10-30", "motivo": "Devoluções", "status": "Concluído", "analise": "Anomalia ID: 34 (Aberta em: 30/10/2025)\\nDescrição: Notas de devolução sem senha. É de suma importância e necessário que os vendedores atendam e fornecam a senha,para que o processo padrão seja realizado para o fornecimento de informações.\\n\\nUnidade: TCG | Depto: Comercial"}, {"data": "2025-10-31", "motivo": "Consumo Indevido ", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-31", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-31", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-03", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-04", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-05", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-06", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-10", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-12", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Solicitação de baixa referente a vencimento", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-17", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-17", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-19", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-22", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-22", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TCG", "responsavel": "Leonardo Rosa", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "motivo": "Devoluções", "status": "Concluído", "analise": "Divergências de informações nas entregas da praça Dourados - segmento varejo."}]}, {"filial": "TCV", "responsavel": "Carlos Eduardo da Silva Camargo", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TPH", "responsavel": "Laudinil Souza Penteado", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TPH", "responsavel": "Rodrigo Bertoni", "anomalias": 8, "planos": 1, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-29", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-31", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-31", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-04", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-07", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-13", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-21", "motivo": "Produtos de FEFO vencidos dentro do CD", "status": "Em Dia", "analise": "Tratando como chegamos a ter mais de 500 mil em produtos vencidos e ter mais de 300 mil em produtos a vencer nos próximos 60 dias.\\nO FEFO, pedidos e o recebimento de mercadoria não era tratado da forma correta dentro da unidade.\\nAs indústrias enviavam os pedidos sem a criação da SIT, alteravam quantidade e mix de produtos no pedidos. Além de enviar produtos sem ter o pedido por parte da antiga gestão. Isso gerou uma quantidade alta de produtos de baixa performance e giro dentro da unidade. Com a saída da indústria Santa Helena, ficaram mais de 10 pallets de produtos com vencimento em Novembro e Dezembro, porém não foram tratados com antecedência.\\nA filial recebia produtos próximos de vencer, não tinha processo no recebimento.\\n"}]}, {"filial": "TSJ", "responsavel": "Ana Cristina", "anomalias": 1, "planos": 1, "status": "Em Dia", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "motivo": "Inadimplencia de cliente que tinha restrição de compra", "status": "Em Dia", "analise": "1 - Por que? \\nR.: Foi liberado a venda, pois a limitação de R$500,00 reais, tinha sido para uma compra anterior, na qual o mesmo já tinha quitado com a unidade\\n2 - Por que? \\nR.: Porque segue no padrão de venda monitora, então vendemos, monitoramos se o cliente irá pagar nós e se for pago, vendemos de novo\\n3 - Por que ? \\nR.: Fazemos a venda monitorada para clientes que possam ter problemas de inadimplencia conosco, sendo assim, vamos monitorando os pagamentos e vendas para não ter um risco maior de inadimplencia. "}]}, {"filial": "TSJ", "responsavel": "Carlos Saldanha", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-10-30", "motivo": "Nota de Troca com Produto Fora do Prazo", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-04", "motivo": "NF de trocas com produtos avariados", "status": "Pendente", "analise": "Sem análise"}, {"data": "2025-11-18", "motivo": "Nota de Troca com Produto a mais ", "status": "Pendente", "analise": "Sem análise"}]}, {"filial": "TSJ", "responsavel": "Cristiano Rodrigues", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "motivo": "Devoluções", "status": "Pendente", "analise": "Sem análise"}]}];
+
         const CREDENCIAIS = {
-            'admin':  { pass: 'admin123', view: 'TODOS' },
-            'ademir': { pass: 'log123',   view: 'Logistica' },
-            'saulo':  { pass: 'com123',   view: 'Comercial' },
-            'ana':    { pass: 'rh123',    view: 'Gente' },
-            'fagnes': { pass: 'fin123',   view: 'Financeiro' },
-            'luis':   { pass: 'prev123',  view: 'Prevencao' }
+            'admin': {pass:'admin123', view:'TODOS'},
+            'ademir': {pass:'log123', view:'Logistica'},
+            'saulo': {pass:'com123', view:'Comercial'},
+            'ana': {pass:'rh123', view:'Gente'},
+            'fagnes': {pass:'fin123', view:'Financeiro'},
+            'luis': {pass:'prev123', view:'Prevencao'}
         };
 
-        // =============================================================
-        // 2. DADOS DO BANCO (NOMES REAIS INCLUÍDOS)
-        // =============================================================
-        const dadosBanco = [{"filial": "ABC", "responsavel": "Missaid Mainardes", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "ABC", "responsavel": "Nei Lessak", "anomalias": 3, "planos": 2, "status": "Pendente", "diretoria": "Logistica"}, {"filial": "API", "responsavel": "Arildo Zago", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "API", "responsavel": "Magno Souza", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Logistica"}, {"filial": "API", "responsavel": "Marcos Nichelle", "anomalias": 2, "planos": 1, "status": "Atrasado", "diretoria": "Comercial"}, {"filial": "API", "responsavel": "Ronaldo Crispim", "anomalias": 2, "planos": 0, "status": "Pendente", "diretoria": "Logistica"}, {"filial": "MCD", "responsavel": "Ademir Lobato", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Logistica"}, {"filial": "MCD", "responsavel": "Cleverson Kuba", "anomalias": 6, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "MCD", "responsavel": "Emanuel Boscolo", "anomalias": 1, "planos": 0, "status": "Concluído", "diretoria": "Financeiro"}, {"filial": "MCD", "responsavel": "Fabio Rogerio", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "MCD", "responsavel": "Jose Oscar", "anomalias": 15, "planos": 0, "status": "Pendente", "diretoria": "Logistica"}, {"filial": "MCD", "responsavel": "Magno Souza", "anomalias": 1, "planos": 2, "status": "Em Dia", "diretoria": "Logistica"}, {"filial": "TBE", "responsavel": "Jonas Portela", "anomalias": 1, "planos": 2, "status": "Em Dia", "diretoria": "Logistica"}, {"filial": "TBE", "responsavel": "Kelly Pereira", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Gente"}, {"filial": "TBE", "responsavel": "Luis Fernando Feijo Ramos Junior", "anomalias": 2, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TBE", "responsavel": "Patricia Aline Sa Silva", "anomalias": 2, "planos": 3, "status": "Atrasado", "diretoria": "Financeiro"}, {"filial": "TBE", "responsavel": "Paulo Cholet", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TBL", "responsavel": "Edson Bragato", "anomalias": 4, "planos": 2, "status": "Atrasado", "diretoria": "Logistica"}, {"filial": "TBL", "responsavel": "Everton Silva", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TBL", "responsavel": "Idinéia Leite", "anomalias": 1, "planos": 3, "status": "Concluído", "diretoria": "Financeiro"}, {"filial": "TBL", "responsavel": "Lucas Santana", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TBL", "responsavel": "Weverton Peixoto", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Logistica"}, {"filial": "TCA", "responsavel": "Becher Barros", "anomalias": 21, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TCA", "responsavel": "José Lima", "anomalias": 14, "planos": 9, "status": "Atrasado", "diretoria": "Logistica"}, {"filial": "TCA", "responsavel": "Yasmin Silva", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TCG", "responsavel": "Cleverson Kuba", "anomalias": 26, "planos": 2, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TCG", "responsavel": "Jose Oscar", "anomalias": 10, "planos": 0, "status": "Pendente", "diretoria": "Logistica"}, {"filial": "TCG", "responsavel": "Leonardo Rosa", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Comercial"}, {"filial": "TCG", "responsavel": "Magno Souza", "anomalias": 4, "planos": 5, "status": "Em Dia", "diretoria": "Logistica"}, {"filial": "TCV", "responsavel": "Carlos Eduardo da Silva Camargo", "anomalias": 1, "planos": 1, "status": "Atrasado", "diretoria": "Comercial"}, {"filial": "TCV", "responsavel": "Christian Miranda", "anomalias": 1, "planos": 0, "status": "Concluído", "diretoria": "Comercial"}, {"filial": "TCV", "responsavel": "Nei Lessak", "anomalias": 4, "planos": 3, "status": "Pendente", "diretoria": "Logistica"}, {"filial": "TPH", "responsavel": "Gerusa Ribeiro", "anomalias": 1, "planos": 4, "status": "Atrasado", "diretoria": "Financeiro"}, {"filial": "TPH", "responsavel": "Laudinil Souza Penteado", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TPH", "responsavel": "Luiz Silva", "anomalias": 5, "planos": 3, "status": "Pendente", "diretoria": "Logistica"}, {"filial": "TPH", "responsavel": "Magno Souza", "anomalias": 1, "planos": 1, "status": "Em Dia", "diretoria": "Logistica"}, {"filial": "TPH", "responsavel": "Rodrigo Bertoni", "anomalias": 8, "planos": 5, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TPH", "responsavel": "Ronaldo Crispim", "anomalias": 10, "planos": 0, "status": "Pendente", "diretoria": "Logistica"}, {"filial": "TSJ", "responsavel": "Ana Cristina", "anomalias": 1, "planos": 3, "status": "Em Dia", "diretoria": "Comercial"}, {"filial": "TSJ", "responsavel": "Carlos Saldanha", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TSJ", "responsavel": "Cristiano Rodrigues", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial"}, {"filial": "TSJ", "responsavel": "Fabricio Ribeiro", "anomalias": 4, "planos": 6, "status": "Em Dia", "diretoria": "Logistica"}];
-
-        // =============================================================
-        // 3. LÓGICA DE LOGIN E ORDENAÇÃO
-        // =============================================================
-        
+        // --- 2. LÓGICA DE LOGIN ---
         let usuarioAtual = null;
-        let chartStatus = null;
-        let chartResponsavel = null;
-        
-        // Estado da ordenação
-        let ordenacaoAtual = {
-            coluna: 'anomalias', // Padrão: por volume
-            direcao: 'desc'      // Padrão: maior para menor
-        };
-
-        function handleEnter(e) { if(e.key === 'Enter') fazerLogin(); }
-
+        function handleEnter(e) { if(e.key==='Enter') fazerLogin(); }
         function fazerLogin() {
-            const user = document.getElementById('user').value.toLowerCase().trim();
-            const pass = document.getElementById('pass').value;
-            const errorMsg = document.getElementById('errorMsg');
-
-            if (CREDENCIAIS[user] && CREDENCIAIS[user].pass === pass) {
-                // Login Sucesso
-                usuarioAtual = CREDENCIAIS[user];
+            const u = document.getElementById('user').value.toLowerCase().trim();
+            const p = document.getElementById('pass').value;
+            if(CREDENCIAIS[u] && CREDENCIAIS[u].pass === p) {
+                usuarioAtual = CREDENCIAIS[u];
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('dashboardContainer').style.display = 'block';
-                
-                // Configura visão inicial
-                const select = document.getElementById('filtroDiretoria');
-                select.value = usuarioAtual.view;
-                
-                // Se não for admin, trava o filtro
-                if (usuarioAtual.view !== 'TODOS') {
-                    select.disabled = true;
-                    select.style.backgroundColor = "#e9ecef";
-                }
-                
+                const sel = document.getElementById('filtroDiretoria');
+                sel.value = usuarioAtual.view;
+                if(usuarioAtual.view !== 'TODOS') sel.disabled = true;
                 alterarFiltro(usuarioAtual.view);
             } else {
-                errorMsg.style.display = 'block';
+                document.getElementById('errorMsg').style.display = 'block';
             }
         }
+        function logout() { location.reload(); }
 
-        function logout() {
-            location.reload();
-        }
+        // --- 3. LÓGICA DO DASHBOARD ---
+        let ordenacao = { col: 'anomalias', dir: 'desc' };
 
         function alterarFiltro(diretoria) {
-            const select = document.getElementById('filtroDiretoria');
-            const label = select.options[select.selectedIndex].text;
-            
-            // Texto do subtítulo
-            if(diretoria !== 'TODOS') {
-                document.getElementById('subtitulo').innerHTML = `Visão Específica: <strong>${label}</strong>`;
-            } else {
-                document.getElementById('subtitulo').innerText = "Monitoramento de Anomalias e Planos de Ação";
-            }
-
-            // 1. Filtra
-            let dadosFiltrados = diretoria === 'TODOS' 
-                ? [...dadosBanco] 
-                : dadosBanco.filter(d => d.diretoria === diretoria);
-
-            // 2. Ordena (mantendo a preferência do usuário)
-            dadosFiltrados = aplicarOrdenacao(dadosFiltrados);
-            
-            // 3. Renderiza
-            atualizarDashboard(dadosFiltrados);
-        }
-
-        function ordenar(coluna) {
-            // Se clicar na mesma coluna, inverte. Se for nova, define como desc (para números) ou asc (para texto)
-            if (ordenacaoAtual.coluna === coluna) {
-                ordenacaoAtual.direcao = ordenacaoAtual.direcao === 'asc' ? 'desc' : 'asc';
-            } else {
-                ordenacaoAtual.coluna = coluna;
-                // Padrão UX: Números queremos ver o maior primeiro (desc), Texto queremos A-Z (asc)
-                if (coluna === 'anomalias' || coluna === 'planos') {
-                    ordenacaoAtual.direcao = 'desc';
-                } else {
-                    ordenacaoAtual.direcao = 'asc';
-                }
-            }
-
-            // Atualiza setas visuais
-            atualizarSetas();
-
-            // Re-aplica filtro e ordenação
-            const diretoria = document.getElementById('filtroDiretoria').value;
-            alterarFiltro(diretoria);
-        }
-
-        function aplicarOrdenacao(dados) {
-            const col = ordenacaoAtual.coluna;
-            const dir = ordenacaoAtual.direcao;
-
-            return dados.sort((a, b) => {
-                let valorA = a[col];
-                let valorB = b[col];
-
-                // Tratamento especial para strings vs numeros
-                if (typeof valorA === 'string') {
-                    valorA = valorA.toLowerCase();
-                    valorB = valorB.toLowerCase();
-                    if (valorA < valorB) return dir === 'asc' ? -1 : 1;
-                    if (valorA > valorB) return dir === 'asc' ? 1 : -1;
-                    return 0;
-                } else {
-                    // Números
-                    return dir === 'asc' ? valorA - valorB : valorB - valorA;
-                }
+            let filtrados = diretoria === 'TODOS' ? [...dadosBanco] : dadosBanco.filter(d => d.diretoria === diretoria);
+            filtrados.sort((a,b) => {
+                let vA = a[ordenacao.col], vB = b[ordenacao.col];
+                if(typeof vA === 'string') return ordenacao.dir==='asc' ? vA.localeCompare(vB) : vB.localeCompare(vA);
+                return ordenacao.dir==='asc' ? vA - vB : vB - vA;
             });
+            renderizar(filtrados);
         }
 
-        function atualizarSetas() {
-            // Limpa todas
-            ['filial', 'responsavel', 'anomalias', 'planos', 'status', 'diretoria'].forEach(c => {
-                document.getElementById(`seta-${c}`).innerText = '';
-            });
-            // Define a atual
-            const seta = ordenacaoAtual.direcao === 'asc' ? '▲' : '▼';
-            document.getElementById(`seta-${ordenacaoAtual.coluna}`).innerText = seta;
+        function ordenar(col) {
+            ordenacao.dir = (ordenacao.col === col && ordenacao.dir === 'desc') ? 'asc' : 'desc';
+            ordenacao.col = col;
+            alterarFiltro(document.getElementById('filtroDiretoria').value);
         }
 
-        function atualizarDashboard(dados) {
+        function renderizar(dados) {
             // KPIs
-            let total = 0, pendente = 0, atrasado = 0, concluido = 0;
+            let total=0, pend=0, atrasado=0, conc=0;
             dados.forEach(d => {
                 total += d.anomalias;
-                if(d.status === 'Pendente') pendente += d.anomalias;
-                else if(d.status === 'Atrasado') atrasado += d.anomalias;
-                else if(d.status === 'Concluído' || d.status === 'Em Dia') concluido += d.anomalias;
+                if(d.status==='Pendente') pend+=d.anomalias;
+                else if(d.status==='Atrasado') atrasado+=d.anomalias;
+                else conc+=d.anomalias;
             });
-
             document.getElementById('kpiTotal').innerText = total;
-            document.getElementById('kpiPendente').innerText = pendente;
+            document.getElementById('kpiPendente').innerText = pend;
             document.getElementById('kpiAtrasado').innerText = atrasado;
-            document.getElementById('kpiConcluido').innerText = concluido;
+            document.getElementById('kpiConcluido').innerText = conc;
 
             // Tabela
             const tbody = document.getElementById('tabelaCorpo');
             tbody.innerHTML = '';
-            
-            dados.forEach(d => {
-                let badgeClass = 'bg-pendente';
-                if(d.status === 'Em Dia') badgeClass = 'bg-emdia';
-                if(d.status === 'Atrasado') badgeClass = 'bg-atrasado';
-                if(d.status === 'Concluído') badgeClass = 'bg-concluido';
-
-                const tr = `
-                    <tr>
-                        <td><span class="filial-tag">${d.filial}</span></td>
-                        <td><span class="responsavel-nome">${d.responsavel}</span></td>
-                        <td style="text-align: center; font-weight:bold;">${d.anomalias}</td>
-                        <td style="text-align: center;">${d.planos}</td>
-                        <td style="text-align: center;"><span class="badge ${badgeClass}">${d.status}</span></td>
-                        <td style="color:#7f8c8d; font-size:12px;">${d.diretoria}</td>
-                    </tr>
+            dados.forEach((d, index) => {
+                let bg = d.status==='Em Dia'?'bg-emdia':(d.status==='Atrasado'?'bg-atrasado':(d.status==='Concluído'?'bg-concluido':'bg-pendente'));
+                // Cria uma referência única para o click (index no array filtrado não é seguro, melhor passar o objeto)
+                // Vamos usar um truque simples: armazenar o objeto no elemento row
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span style="font-family:monospace; font-weight:bold; color:#666;">${d.filial}</span></td>
+                    <td><a class="link-responsavel" onclick='abrirDetalhes(${JSON.stringify(d)})'>${d.responsavel}</a></td>
+                    <td style="text-align:center; font-weight:bold;">${d.anomalias}</td>
+                    <td style="text-align:center;">${d.planos}</td>
+                    <td style="text-align:center;"><span class="badge ${bg}">${d.status}</span></td>
+                    <td style="color:#888; font-size:12px;">${d.diretoria}</td>
                 `;
-                tbody.innerHTML += tr;
+                tbody.appendChild(row);
             });
 
             // Gráficos
@@ -352,70 +253,69 @@
         }
 
         function renderizarGraficos(dados) {
-            // Status
-            const statusCounts = { 'Pendente': 0, 'Atrasado': 0, 'Em Dia': 0, 'Concluído': 0 };
-            dados.forEach(d => statusCounts[d.status] = (statusCounts[d.status] || 0) + d.anomalias);
-
-            const ctxStatus = document.getElementById('chartStatus').getContext('2d');
-            if(chartStatus) chartStatus.destroy();
+            // Status Doughnut
+            let statusMap = {'Pendente':0, 'Atrasado':0, 'Em Dia':0, 'Concluído':0};
+            dados.forEach(d => statusMap[d.status] += d.anomalias);
             
-            chartStatus = new Chart(ctxStatus, {
+            let ctxS = document.getElementById('chartStatus').getContext('2d');
+            if(window.chartS instanceof Chart) window.chartS.destroy();
+            window.chartS = new Chart(ctxS, {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(statusCounts),
-                    datasets: [{
-                        data: Object.values(statusCounts),
-                        backgroundColor: ['#d63031', '#e17055', '#27ae60', '#636e72'],
-                        borderWidth: 0
-                    }]
+                    labels: Object.keys(statusMap),
+                    datasets: [{ data: Object.values(statusMap), backgroundColor: ['#d63031','#e17055','#27ae60','#636e72'] }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        title: { display: true, text: 'Volume por Status', font: {size: 16} }
-                    }
-                }
+                options: { responsive: true, plugins: { title: {display:true, text:'Volume por Status'} } }
             });
 
-            // Barras - Top Ofensores (Reaproveita a ordenação atual ou fixa por volume)
-            // Aqui vamos forçar mostrar os Top Ofensores por volume para não ficar estranho no gráfico
-            const topOffenders = [...dados]
-                .sort((a, b) => b.anomalias - a.anomalias)
-                .slice(0, 8);
-
-            const ctxResp = document.getElementById('chartResponsavel').getContext('2d');
-            if(chartResponsavel) chartResponsavel.destroy();
-
-            chartResponsavel = new Chart(ctxResp, {
+            // Top Ofensores Bar
+            let top = [...dados].sort((a,b) => b.anomalias - a.anomalias).slice(0,8);
+            let ctxR = document.getElementById('chartResponsavel').getContext('2d');
+            if(window.chartR instanceof Chart) window.chartR.destroy();
+            window.chartR = new Chart(ctxR, {
                 type: 'bar',
                 data: {
-                    labels: topOffenders.map(d => d.responsavel.split(' ')[0] + ' (' + d.filial + ')'),
-                    datasets: [{
-                        label: 'Total Anomalias',
-                        data: topOffenders.map(d => d.anomalias),
-                        backgroundColor: '#0984e3',
-                        borderRadius: 4
-                    }]
+                    labels: top.map(d => d.responsavel.split(' ')[0]),
+                    datasets: [{ label: 'Anomalias', data: top.map(d => d.anomalias), backgroundColor: '#0984e3' }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        title: { display: true, text: 'Maiores Ofensores (Volume Total)', font: {size: 16} }
-                    },
-                    scales: {
-                        y: { beginAtZero: true },
-                        x: { grid: { display: false } }
-                    }
-                }
+                options: { responsive: true, plugins: { legend: {display:false}, title: {display:true, text:'Top Ofensores'} } }
             });
         }
 
-        // Inicia setas
-        atualizarSetas();
+        // --- 4. MODAL DE DETALHES ---
+        function abrirDetalhes(item) {
+            document.getElementById('modalTitulo').innerText = "Detalhes: " + item.responsavel;
+            document.getElementById('modalSubtitulo').innerText = "Filial: " + item.filial + " | Total Anomalias: " + item.anomalias;
+            
+            const tbody = document.getElementById('modalCorpo');
+            tbody.innerHTML = '';
+
+            item.detalhes.forEach(det => {
+                let corStatus = det.status==='Pendente'?'#d63031':(det.status==='Concluído'?'green':'#e17055');
+                let row = `
+                    <tr>
+                        <td>${det.data}</td>
+                        <td style="color:${corStatus}; font-weight:bold;">${det.status}</td>
+                        <td>${det.motivo}</td>
+                        <td style="color:#555;">${det.analise}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            document.getElementById('detalhesModal').style.display = "block";
+        }
+
+        function fecharModal() {
+            document.getElementById('detalhesModal').style.display = "none";
+        }
+
+        // Fecha modal se clicar fora
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('detalhesModal')) {
+                fecharModal();
+            }
+        }
     </script>
 </body>
 </html>
