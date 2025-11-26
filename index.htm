@@ -8,63 +8,88 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
         
-        /* LOGIN */
+        /* TELA DE LOGIN */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .login-box { background: white; padding: 40px; border-radius: 12px; width: 350px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
-        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
-        .login-btn { width: 100%; padding: 12px; background: #0056b3; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; width: 380px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
+        .login-input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
+        .login-btn { width: 100%; padding: 12px; background: #0056b3; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
         .login-btn:hover { background: #004494; }
+        
+        /* Botões de Alternância (Diretor/Gerente) */
+        .toggle-container { display: flex; background: #eee; border-radius: 8px; margin-bottom: 20px; padding: 4px; }
+        .toggle-btn { flex: 1; padding: 10px; border: none; background: transparent; cursor: pointer; border-radius: 6px; font-weight: 600; color: #666; transition: 0.3s; }
+        .toggle-btn.active { background: #fff; color: #0056b3; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        /* MODAL */
+        /* JANELA DE DETALHES (MODAL) */
         #detalhesModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(3px); }
-        .modal-content { background-color: #fff; margin: 5% auto; padding: 25px; border-radius: 10px; width: 85%; max-width: 950px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .close-btn { float: right; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
+        .modal-content { background-color: #fff; margin: 5% auto; padding: 25px; border-radius: 10px; width: 85%; max-width: 950px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
         .close-btn:hover { color: #333; }
 
-        /* LAYOUT */
+        /* DASHBOARD - CABEÇALHO */
         .header { background: #fff; padding: 20px 30px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 5px solid #0056b3; }
         .header h1 { margin: 0; font-size: 24px; color: #004085; }
         
+        /* KPIS (CARTÕES) */
         .kpi-container { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
         .kpi-card { flex: 1; min-width: 200px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border-left: 5px solid #ccc; }
         .kpi-card h3 { margin: 0 0 10px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         .kpi-card .value { font-size: 38px; font-weight: 700; color: #333; }
-        .kpi-blue { border-color: #007bff; } .kpi-red { border-color: #dc3545; } .kpi-orange { border-color: #fd7e14; } .kpi-green { border-color: #28a745; }
+        .kpi-blue { border-left-color: #007bff; } .kpi-red { border-left-color: #dc3545; } 
+        .kpi-orange { border-left-color: #fd7e14; } .kpi-green { border-left-color: #28a745; }
 
-        .table-container { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); overflow-x: auto; }
+        /* TABELAS */
+        .table-container { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
         th { padding: 15px; text-align: left; background: #f8f9fa; color: #555; font-weight: 700; border-bottom: 2px solid #e9ecef; cursor: pointer; }
-        td { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; font-size: 14px; }
+        td { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; font-size: 14px; vertical-align: middle; }
+        tr:hover { background-color: #f8f9fa; }
+        
+        /* BADGES E TAGS */
         .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; color: #fff; display: inline-block; min-width: 80px; text-align: center; }
+        .bg-pendente { background-color: #dc3545; } .bg-atrasado { background-color: #fd7e14; } .bg-concluido { background-color: #28a745; }
         
-        .bg-pendente { background-color: #dc3545; }
-        .bg-atrasado { background-color: #fd7e14; }
-        .bg-concluido { background-color: #28a745; }
-        
-        /* Tabela Modal */
-        .tabela-detalhe { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .tabela-detalhe th { background: #0056b3; color: white; padding: 10px; font-size: 13px; }
-        .tabela-detalhe td { border: 1px solid #dee2e6; padding: 10px; font-size: 13px; vertical-align: top; }
+        .tabela-detalhe { width: 100%; margin-top: 15px; }
+        .tabela-detalhe th { background: #0056b3; color: white; font-size: 13px; }
+        .tabela-detalhe td { border: 1px solid #dee2e6; font-size: 13px; vertical-align: top; }
         .tabela-detalhe tr:nth-child(even) { background-color: #f8f9fa; }
-        
-        .cat-tag { background: #e9ecef; color: #495057; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; display: inline-block; margin-bottom: 4px; }
+        .cat-tag { background: #e9ecef; color: #495057; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; display: inline-block; white-space: nowrap; }
+        .link-nome { color: #0056b3; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .link-nome:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <div id="loginOverlay">
         <div class="login-box">
-            <h2 style="color: #004085;">Triunfante</h2>
-            <p style="color: #666; margin-bottom: 20px;">Acesso Executivo</p>
-            <input type="text" id="user" class="login-input" placeholder="Usuário (ex: ademir)" onkeypress="handleEnter(event)">
-            <input type="password" id="pass" class="login-input" placeholder="Senha" onkeypress="handleEnter(event)">
-            <button class="login-btn" onclick="fazerLogin()">Entrar</button>
-            <p id="errorMsg" style="color: red; font-size: 13px; margin-top: 10px; display: none;">Dados incorretos.</p>
-            <div style="margin-top: 15px; font-size: 12px; color: #aaa;">
-                Senhas para teste:<br>
-                ademir (log123) | saulo (com123)<br>
-                ana (rh123) | fagnes (fin123)
+            <h2 style="color: #004085; margin-bottom: 20px;">Triunfante</h2>
+            
+            <div class="toggle-container">
+                <button id="btnDiretor" class="toggle-btn active" onclick="mudarPerfil('diretor')">Diretoria</button>
+                <button id="btnGerente" class="toggle-btn" onclick="mudarPerfil('gerente')">Gerente/Coord.</button>
             </div>
+
+            <div id="formDiretor">
+                <input type="text" id="userDir" class="login-input" placeholder="Usuário (ex: ademir)" onkeypress="handleEnter(event)">
+                <input type="password" id="passDir" class="login-input" placeholder="Senha" onkeypress="handleEnter(event)">
+            </div>
+
+            <div id="formGerente" style="display:none;">
+                <select id="selUnidade" class="login-input">
+                    <option value="">Selecione a Unidade...</option>
+                </select>
+                <select id="selCargo" class="login-input">
+                    <option value="">Selecione seu Cargo...</option>
+                    <option value="log">Gerente de Logística</option>
+                    <option value="com">Gerente Comercial</option>
+                    <option value="adm">Coord. Administrativo/Financeiro</option>
+                    <option value="geral">Gerente Geral (Visão Completa)</option>
+                </select>
+                <input type="password" id="passGer" class="login-input" placeholder="Senha (Padrão: 1234)" onkeypress="handleEnter(event)">
+            </div>
+
+            <button class="login-btn" onclick="fazerLogin()">Acessar Painel</button>
+            <p id="errorMsg" style="color: red; font-size: 13px; margin-top: 15px; display: none;">Dados incorretos.</p>
         </div>
     </div>
 
@@ -73,14 +98,14 @@
             <span class="close-btn" onclick="fecharModal()">&times;</span>
             <h2 id="modalTitulo" style="color: #004085; margin: 0 0 5px 0;">Detalhes</h2>
             <p id="modalSubtitulo" style="color: #666; margin: 0 0 20px 0;"></p>
-            <div style="overflow-x: auto;">
+            <div style="overflow-x: auto; max-height: 400px;">
                 <table class="tabela-detalhe">
                     <thead>
                         <tr>
-                            <th width="15%">Data</th>
+                            <th width="12%">Data</th>
                             <th width="10%">Status</th>
-                            <th width="30%">Motivo (Automática)</th>
-                            <th width="45%">Descrição Original (Banco)</th>
+                            <th width="25%">Motivo (Auto)</th>
+                            <th width="53%">Descrição Original</th>
                         </tr>
                     </thead>
                     <tbody id="modalCorpo"></tbody>
@@ -95,9 +120,9 @@
                 <h1>Dashboard de Anomalias</h1>
                 <small style="color: #666;">Monitoramento e Tratativas</small>
             </div>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <span id="userBadge" style="background: #e9ecef; padding: 5px 10px; border-radius: 4px; font-weight: bold; color: #555;"></span>
-                <button onclick="logout()" style="padding: 8px 15px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer;">Sair</button>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span id="userBadge" style="background: #e9ecef; padding: 6px 12px; border-radius: 4px; font-weight: bold; color: #555; font-size: 14px;"></span>
+                <button onclick="logout()" style="padding: 8px 15px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer; font-weight: bold;">Sair</button>
             </div>
         </div>
 
@@ -108,24 +133,29 @@
             <div class="kpi-card kpi-green"><h3>Concluídos</h3><div class="value" id="kpiConcluido">0</div></div>
         </div>
 
-        <div class="charts-row" style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <div class="table-container" style="flex: 1; min-width: 300px; height: 350px;">
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div class="table-container" style="flex: 1; min-width: 300px; height: 380px; margin-top:0;">
                 <canvas id="chartStatus"></canvas>
             </div>
-            <div class="table-container" style="flex: 1; min-width: 300px; height: 350px;">
+            <div class="table-container" style="flex: 1; min-width: 300px; height: 380px; margin-top:0;">
                 <canvas id="chartResponsavel"></canvas>
             </div>
         </div>
 
         <div class="table-container">
-            <h3 style="margin-top: 0; color: #444;">📋 Visão Detalhada por Responsável</h3>
-            <p style="font-size: 13px; color: #888;">*Clique no nome para ver a classificação automática das anomalias.</p>
-            <table>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin: 0; color: #444;">📋 Visão Detalhada</h3>
+                <select id="filtroDiretoria" onchange="alterarFiltroDiretoria(this.value)" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                </select>
+            </div>
+            <p style="font-size: 13px; color: #888; margin-top: 5px;">*Clique no nome para ver detalhes.</p>
+            
+            <table style="margin-top: 15px;">
                 <thead>
                     <tr>
                         <th onclick="ordenar('filial')">Filial ↕</th>
                         <th onclick="ordenar('responsavel')">Responsável ↕</th>
-                        <th onclick="ordenar('anomalias')" style="text-align: center;">Qtd ↕</th>
+                        <th onclick="ordenar('anomalias')" style="text-align: center;">Anomalias ↕</th>
                         <th onclick="ordenar('planos')" style="text-align: center;">Planos ↕</th>
                         <th onclick="ordenar('status')" style="text-align: center;">Status Geral ↕</th>
                         <th>Ação</th>
@@ -137,56 +167,62 @@
     </div>
 
     <script>
+
         // =================================================================
-        // DADOS AUTOMÁTICOS (Extraídos e Classificados do Banco)
+// BANCO DE DADOS COMPLETO (200 REGISTROS)
+// =================================================================
+const dadosBanco = [
+    {"filial":"ABC","responsavel":"Missaid Mainardes","anomalias":1,"planos":4,"status":"Em Dia","diretoria":"Comercial","detalhes":[{"dt":"2025-11-12","st":"Em Dia","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade ABC apresentou R$ 1.050.735,23 em devoluções, sendo..."}]},
+    {"filial":"ABC","responsavel":"Nei Lessak","anomalias":3,"planos":2,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-11","st":"Concluído","cat":"Avaria","desc":"Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-62208-543  , gentileza apresentar PLANO D..."},{"dt":"2025-11-11","st":"Concluído","cat":"Avaria","desc":"Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-19233-716, gentileza apresentar PLANO DE ..."},{"dt":"2025-11-24","st":"Pendente","cat":"Avaria","desc":"Constatação de ANOMALIA de AVARIAS, em 13NOV25, em ABC (REG 14653-624) que totalizou R$ 547,27, para..."}]},
+    {"filial":"API","responsavel":"Arildo Zago","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-13","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade API apresentou R$ 1.314.189,82 em devoluções, com p..."}]},
+    {"filial":"API","responsavel":"Magno Souza","anomalias":1,"planos":1,"status":"Concluído","diretoria":"Logistica","detalhes":[{"dt":"2025-11-13","st":"Concluído","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade API apresentou um total de R$ 1.314.189,82 em devol..."}]},
+    {"filial":"API","responsavel":"Marcos Nichelle","anomalias":2,"planos":1,"status":"Atrasado","diretoria":"Comercial","detalhes":[{"dt":"2025-11-12","st":"Atrasado","cat":"Vencimento/FEFO","desc":"Produtos vencidos que estavam sendo sinalizados com antecedência para que ocorrerem ações de vendas ..."},{"dt":"2025-11-19","st":"Pendente","cat":"Vencimento/FEFO","desc":"Elaborar plano de ação para redução de vencidos..."}]},
+    {"filial":"API","responsavel":"Ronaldo Crispim","anomalias":2,"planos":0,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-10-31","st":"Pendente","cat":"Outros","desc":"Ajustes de estoques constatados no inventario parcial que prrecisam de medidas tratativas ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Divergência","desc":"Solicitação de baixa de estoque, requer plano de ação para reduzir as ocorrências dessas faltas e so..."}]},
+    {"filial":"MCD","responsavel":"Ademir Lobato","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"O local apresenta uma grande quantidade de fezes de roedores, indicando infestação ativa. Essa condi..."}]},
+    {"filial":"MCD","responsavel":"Cleverson Kuba","anomalias":6,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-04","st":"Pendente","cat":"Vencimento/FEFO","desc":"Produtos  topei pacoca vencidos no estoque validade 01/11/2025..."},{"dt":"2025-11-06","st":"Pendente","cat":"Vencimento/FEFO","desc":"produtos vencidos no  estoque por gentileza realizar processo de baixa..."},{"dt":"2025-11-13","st":"Pendente","cat":"Vencimento/FEFO","desc":"produtos vencidos no  estoque solicito por gentileza a baixa do iterm ...."},{"dt":"2025-11-14","st":"Pendente","cat":"Devolução","desc":"DANFE de devolução sem senha de devolução   ..."},{"dt":"2025-11-14","st":"Pendente","cat":"Devolução","desc":"danfe de devolução  sem a senha  de devolução solicito apoio sobre o assunto ..."},{"dt":"2025-11-17","st":"Pendente","cat":"Vencimento/FEFO","desc":"produto vencido no  estoque ..."}]},
+    {"filial":"MCD","responsavel":"Emanuel Boscolo","anomalias":1,"planos":0,"status":"Concluído","diretoria":"Financeiro","detalhes":[{"dt":"2025-11-05","st":"Concluído","cat":"Fiscal/Financeiro","desc":"Na data de hoje(05/11/2025), na Unidade de MCD, teve um pagamento para a DUCOCO ALIMENTOS SA, NF 187..."}]},
+    {"filial":"MCD","responsavel":"Fabio Rogerio","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-13","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade MCD apresentou R$ 4.221.881,60 em devoluções, sendo..."}]},
+    {"filial":"MCD","responsavel":"Jose Oscar","anomalias":15,"planos":0,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Encontrado roedor na carga de número 10427 durante o processo de carregamento.  ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Encontrado  na rua k  posição k005 um roedor esmagado ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Presença  do item colgate proteção  ativa misturados  com os demais  itens na posição o0040 ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Restos de equipe  descartado em local impróprio ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Avaria","desc":"Produtos fracionados  fora do padrao  de organização  Gerando avarias ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Produto desorganizado no pick fora de padrão ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Palet ração no aéreo risco de queda ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Avaria","desc":"Avaria colgate com outros itens em bom estado de venda ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Avaria","desc":"Avarias no chão  em várias ruas de Mcd atraindo roedores pombos e moscas ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Placas de identificação  de rua no. Chão ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Avaria","desc":"Avarias por consumo  indevido biscoito e batatas no final. Das. Ruasc..."},{"dt":"2025-11-11","st":"Pendente","cat":"Avaria","desc":"Lixo e sujeira junto com produtos  fracionados Gerando avaria fora de padrão de organização ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Avaria","desc":"Fezes de roedores,produtos avariado em meio a produtos em bom estado podendo contaminar ..."},{"dt":"2025-11-16","st":"Pendente","cat":"Outros","desc":"Posições com risco de queda de produtos, pois esses produtos não estão alocados de forma correta no ..."},{"dt":"2025-11-17","st":"Pendente","cat":"Avaria","desc":"sabonetes na rua N posição 57.0 molhando gerando avaria ..."}]},
+    {"filial":"MCD","responsavel":"Magno Souza","anomalias":1,"planos":2,"status":"Em Dia","diretoria":"Logistica","detalhes":[{"dt":"2025-11-13","st":"Em Dia","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade MCD apresentou um total de R$ 4.221.881,60 em devol..."}]},
+    {"filial":"TBE","responsavel":"Jonas Portela","anomalias":1,"planos":2,"status":"Em Dia","diretoria":"Logistica","detalhes":[{"dt":"2025-11-12","st":"Em Dia","cat":"Outros","desc":"Saídas de Emergência - Solicitado Lacres. Uma das saídas, está obstruída...."}]},
+    {"filial":"TBE","responsavel":"Kelly Pereira","anomalias":1,"planos":1,"status":"Concluído","diretoria":"Gente","detalhes":[{"dt":"2025-10-30","st":"Concluído","cat":"Outros","desc":"Prezados,  Desde o dia 17/10/2025 estamos solicitando ao time de Gente e Gestão a lista de férias do..."}]},
+    {"filial":"TBE","responsavel":"Luis Fernando Feijo Ramos Junior","anomalias":2,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-12","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TBA apresentou R$ 830.282,30 em devoluções, sendo p..."},{"dt":"2025-11-13","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TBE apresentou R$ 153.633,65 em devoluções, com pre..."}]},
+    {"filial":"TBE","responsavel":"Patricia Aline Sa Silva","anomalias":2,"planos":3,"status":"Atrasado","diretoria":"Financeiro","detalhes":[{"dt":"2025-10-30","st":"Atrasado","cat":"Fiscal/Financeiro","desc":"Na data de hoje 30/10/2025, foi informado dois ACORDOS COMERCIAIS em TPA, que não foram incluídos no..."},{"dt":"2025-11-10","st":"Atrasado","cat":"Vencimento/FEFO","desc":"Divergências nos pagamentos de TPA, na data de hoje 10/11/2025. A Unidade informou no DDA de TPA, um..."}]},
+    {"filial":"TBE","responsavel":"Paulo Cholet","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-12","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TPA apresentou R$ 1.962.383,11 em devoluções, sendo..."}]},
+    {"filial":"TBL","responsavel":"Edson Bragato","anomalias":4,"planos":2,"status":"Atrasado","diretoria":"Logistica","detalhes":[{"dt":"2025-11-10","st":"Atrasado","cat":"Avaria","desc":"ASSUNTO: Avaria no ato da entrega ,chocolate derretido. CONSIDERANDO que devem ser tomados, pela Uni..."},{"dt":"2025-11-11","st":"Atrasado","cat":"Avaria","desc":"Realizado rondas de 5s em todos os corredores do  deposito (Unidade TBL) e foi constatados produtos ..."},{"dt":"2025-11-19","st":"Pendente","cat":"Vencimento/FEFO","desc":"Produtos Vencidos no estoque FEFO..."},{"dt":"2025-11-19","st":"Pendente","cat":"Avaria","desc":"Produtos com riscos de avarias fora das caixas..."}]},
+    {"filial":"TBL","responsavel":"Everton Silva","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-12","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TBL apresentou R$ 985.792,13 em devoluções, sendo a..."}]},
+    {"filial":"TBL","responsavel":"Idinéia Leite","anomalias":1,"planos":3,"status":"Concluído","diretoria":"Financeiro","detalhes":[{"dt":"2025-11-10","st":"Concluído","cat":"Divergência","desc":"Encontrado desvio no processo de solicitação de baixa de estoque, onde um ajuste foi realizado após ..."}]},
+    {"filial":"TBL","responsavel":"Lucas Santana","anomalias":7,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-10-29","st":"Pendente","cat":"Vencimento/FEFO","desc":"Cliente: Casa Vila Real  NF 11925  Valor NF.R$:.94,68  Obs: 22 Unid. De Água de Coco Puro Coco 200ml..."},{"dt":"2025-10-29","st":"Pendente","cat":"Vencimento/FEFO","desc":"Cliente: Casa Vila Real  NF 11925  Valor NF.R$:.94,68  Obs: 22 Unid. De Água de Coco Puro Coco 200ml..."},{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"Nota:.26796   Valor R$:. 1011,01 Valor Perda R$:. 71,37 Cliente:. MOLINS SUPERMERCADOS  PRODUTOS FOR..."},{"dt":"2025-10-30","st":"Pendente","cat":"Divergência","desc":"NOTA FISCAL Nº 19800 VALOR R$:. 653,27 CLIENTE:. MOLINS SUPERMERCADOS  MOTIVO: PRODUTOS DISCRIMINADO..."},{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"NOTA FISCAL Nº 10025 VALOR R$:. 187,80 CLIENTE: M L XAVIER SUPERMERCADOS  MOTIVO: PRODUTOS FORA DO P..."},{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"NOTA FISCAL Nº 8730 VALOR R$:. 259,24 CLIENTE: C R V ESTERO E CIA LTDA  MOTIVO: PRODUTOS FORA DO PRA..."},{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"NOTA FISCAL Nº 11925 VALOR R$:. 94,68 VALOR PERDA R$:. 54,78 CLIENTE: CASA VILA REAL  MOTIVO: PRODUT..."}]},
+    {"filial":"TBL","responsavel":"Weverton Peixoto","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-06","st":"Pendente","cat":"Outros","desc":"No dia 06/11/2025 as 12h10min foi identificado o mau procedimento do colaborador Laércio (logística)..."}]},
+    {"filial":"TCA","responsavel":"Becher Barros","anomalias":21,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-03","st":"Pendente","cat":"Divergência","desc":"NF DE TROCA COM FALTA DE PRODUTOS E FORA DO PADRÃO DE RECEBIMENTO (90 DIAS)...."},{"dt":"2025-11-03","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF DE TROCA N 15116 COM DIVERGÊNCIA CLIENTE: SANTOGO ALIMENTOS LTDA DIVERGÊNCIAS: FALTA DE PRODUTOS ..."},{"dt":"2025-11-03","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF DE TROCA N 15116 COM DIVERGÊNCIA CLIENTE: SANTOGO ALIMENTOS LTDA DIVERGÊNCIAS: FALTA DE PRODUTOS ..."},{"dt":"2025-11-03","st":"Pendente","cat":"Divergência","desc":"NF DE TROCA N 2662 COM DIVERGÊNCIA CLIENTE: TODO DIA LTDA  DIVERGÊNCIA: FALTA DE PRODUTO..."},{"dt":"2025-11-03","st":"Pendente","cat":"Divergência","desc":"NF DE TROCA N 2661 COM DIVERGÊNCIA CLIENTE: TODO DIA LTDA  DIVERGÊNCIA: FALTA DE PRODUTO..."},{"dt":"2025-11-03","st":"Pendente","cat":"Divergência","desc":"NFS DE TROCA N 40525, 40526, 40527, 40528, 40529, 40530 E 40531 COM DIVERGÊNCIAS. CLIENTE: TROPICAL ..."},{"dt":"2025-11-07","st":"Pendente","cat":"Divergência","desc":"NF DE TROCA FORA DO PADRÃO DE RECEBIMENTO CONSTA FALTA DE PRODUTOS APÓS AUDITORIA...."},{"dt":"2025-11-12","st":"Pendente","cat":"Outros","desc":"NF de troca 8352 Produtos fora do padrão de recebimento +60 dias..."},{"dt":"2025-11-12","st":"Pendente","cat":"Divergência","desc":"NF de troca - 1177 Falta de produtos..."},{"dt":"2025-11-12","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF de troca - 8769 Produtos fora do prazo de recebimento + 60 dias..."},{"dt":"2025-11-12","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF de troca - 39717 Produtos fora do prazo de recebimento +60 dias..."},{"dt":"2025-11-12","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF de troca - 39716 Produtos fora do prazo de rebimento +60 dias..."},{"dt":"2025-11-12","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF de troca - 39719 Produtos fora do prazo de recebimento + 60 dias..."},{"dt":"2025-11-12","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF de troca - 39718 Produtos fora do prazo de recebimento +60 dias..."},{"dt":"2025-11-12","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF de troca - 8766 Produtos fora do prazo de recebimento +60 dias/faltas..."},{"dt":"2025-11-12","st":"Pendente","cat":"Divergência","desc":"NF de troca - 24348 Produtos fora do padrão de recebimento - faltas..."},{"dt":"2025-11-12","st":"Pendente","cat":"Divergência","desc":"NF de troca - 310 Fora do padrão de recebimento - falta de produtos..."},{"dt":"2025-11-12","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF de troca - 16263 Produto fora do prazo de recebimento + 60 dias..."},{"dt":"2025-11-12","st":"Pendente","cat":"Vencimento/FEFO","desc":"NF de troca - 66 Produto fora do prazo de recebimento +60 dias/faltas..."},{"dt":"2025-11-21","st":"Pendente","cat":"Outros","desc":"NF de troca 123692 Produtos com a validade fora do padrão de recebimento Datas: 2023/2024..."},{"dt":"2025-11-21","st":"Pendente","cat":"Outros","desc":"NF de troca 123694 Produtos com validade fora do padrão de recebimento. Datas: 2023/2024..."}]},
+    {"filial":"TCA","responsavel":"José Lima","anomalias":14,"planos":9,"status":"Atrasado","diretoria":"Logistica","detalhes":[{"dt":"2025-10-30","st":"Atrasado","cat":"Vencimento/FEFO","desc":"Produtos vencidos ainda presentes no pick Colaboradores já cientes do vencimento...."},{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"PRODUTO VENCIDO PRESENTE NO PICK COLABORADORES CIENTES DO VENCIMENTO..."},{"dt":"2025-11-03","st":"Atrasado","cat":"Devolução","desc":"Processo de conferência interrompido Conferente abandona devolução no meio da conferência após ser c..."},{"dt":"2025-11-03","st":"Atrasado","cat":"Outros","desc":"Refrigerador com defeito, não faz degelo Acionar manutenção..."},{"dt":"2025-11-03","st":"Atrasado","cat":"Divergência","desc":"Falta de organização de picking Produtos fora das caixas ..."},{"dt":"2025-11-03","st":"Concluído","cat":"Outros","desc":"Produtos em caixa no chão..."},{"dt":"2025-11-03","st":"Atrasado","cat":"Outros","desc":"Paletes mal posicionados e sem strech no aéreo...."},{"dt":"2025-11-03","st":"Atrasado","cat":"Devolução","desc":"Demora na alocação de produtos Ocupando espaço reservado para avarias/devolução...."},{"dt":"2025-11-07","st":"Atrasado","cat":"Avaria","desc":"Avarias deixadas em local inapropriado, podendo atrair pombos/pragas. Sem formulário de avarias pree..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"PRODUTOS FORA DAS CAIXAS ..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"PRODUTOS FORA DAS CAIXAS..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"PRODUTOS FORA DAS CAIXAS..."},{"dt":"2025-11-19","st":"Pendente","cat":"Outros","desc":"Produto deixado no chão..."},{"dt":"2025-11-19","st":"Pendente","cat":"Outros","desc":"Lâmpadas queimadas presentes em todas as docas, necessário manutenção..."}]},
+    {"filial":"TCA","responsavel":"Yasmin Silva","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-13","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TCA apresentou R$ 1.731.923,40 em devoluções, com p..."}]},
+    {"filial":"TCG","responsavel":"Cleverson Kuba","anomalias":26,"planos":2,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-10-30","st":"Concluído","cat":"Devolução","desc":"Notas de devolução sem pedido do cliente. Nfs: 14824 13628 13630 14262..."},{"dt":"2025-10-30","st":"Concluído","cat":"Devolução","desc":"Notas de devolução sem senha. É de suma importância e necessário que os vendedores atendam e forneca..."},{"dt":"2025-10-31","st":"Pendente","cat":"Avaria","desc":"Justificativa: CONSUMO INDEVIDO E MANUSEIO INCORRETO INTERNO NA UNIDADE POR PARTE DA OPERAÇAO SEGUE ..."},{"dt":"2025-10-31","st":"Pendente","cat":"Vencimento/FEFO","desc":"SOLICITAÇÃO DE BAIXA  Justificativa: PRODUTO VENCIDO NO ESTOQUE  Unidade: TCG  Motivo: Vencimento  S..."},{"dt":"2025-10-31","st":"Pendente","cat":"Vencimento/FEFO","desc":"Data da Solicitação: 2025-10-29  Solicitante: LUANA FERREIRA (PREVENÇÃO PERDAS)   Justificativa: PRO..."},{"dt":"2025-11-03","st":"Pendente","cat":"Devolução","desc":"Nota de devolução,onde o cliente não solicitou o pedido. Segue evidências...."},{"dt":"2025-11-03","st":"Pendente","cat":"Fiscal/Financeiro","desc":"Notas sem senha. Segue para averiguação as imagens das notas,e solicitação para que os vendedores at..."},{"dt":"2025-11-03","st":"Pendente","cat":"Fiscal/Financeiro","desc":"Notas sem senha...."},{"dt":"2025-11-04","st":"Pendente","cat":"Vencimento/FEFO","desc":"Solicitação de baixa referente a vencimento. Código: 14200111 Produto: Yokitos Anéis de Cebola 01x10..."},{"dt":"2025-11-05","st":"Pendente","cat":"Fiscal/Financeiro","desc":"Notas sem senha. Motorista informa que os vendedores não estão atendendo para fornecer senhas...."},{"dt":"2025-11-06","st":"Pendente","cat":"Vencimento/FEFO","desc":"produto vencido no estoque. Por gentileza solicito a baixa dos seguintes produtos, pois os mesmo ja ..."},{"dt":"2025-11-10","st":"Pendente","cat":"Fiscal/Financeiro","desc":"Notas sem senha. Motoristas continuam afirmando que os vendedores não estão fornecendo a senha , poi..."},{"dt":"2025-11-12","st":"Pendente","cat":"Vencimento/FEFO","desc":"Solicitação de baixa, produto vencido, dentro da unidade...."},{"dt":"2025-11-13","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TCG apresentou R$ 3.829.517,77 em devoluções, com p..."},{"dt":"2025-11-13","st":"Pendente","cat":"Vencimento/FEFO","desc":"Solicitação de baixa, por motivo de data de vencimento expirada. Segue evidencia, com código, descri..."},{"dt":"2025-11-17","st":"Pendente","cat":"Devolução","desc":"Nota de devolução,onde o cliente não solicitau o pedido. Por gentileza seguir os padrões corretos,co..."},{"dt":"2025-11-17","st":"Pendente","cat":"Devolução","desc":"Notas de devolução sem senha...."},{"dt":"2025-11-19","st":"Pendente","cat":"Fiscal/Financeiro","desc":"Notas sem senha...."},{"dt":"2025-11-19","st":"Pendente","cat":"Fiscal/Financeiro","desc":"Notas sem senha..."},{"dt":"2025-11-19","st":"Pendente","cat":"Fiscal/Financeiro","desc":"Notas devolvidas devido ao cliente não ter solicitado o pedido. Total das notas=606,28 em pedidos na..."},{"dt":"2025-11-19","st":"Pendente","cat":"Vencimento/FEFO","desc":"Fefo,solicitação de baixa produto com data expirada...."},{"dt":"2025-11-19","st":"Pendente","cat":"Vencimento/FEFO","desc":"Produto vencido dentro da unidade,necessário baixa...."},{"dt":"2025-11-22","st":"Pendente","cat":"Vencimento/FEFO","desc":"Produto vencido no estoque. Segue evidência para baixa...."},{"dt":"2025-11-22","st":"Pendente","cat":"Vencimento/FEFO","desc":"Produto com data de vencimento expirada. Segue evidência para solicitação de baixa...."},{"dt":"2025-11-24","st":"Pendente","cat":"Fiscal/Financeiro","desc":"Notas sem senha...."},{"dt":"2025-11-24","st":"Pendente","cat":"Devolução","desc":"Notas devolução, cliente nao solicitou...."}]},
+    {"filial":"TCG","responsavel":"Ian Jantsch","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-25","st":"Pendente","cat":"Divergência","desc":"Prezados, Refaço um alerta importante referente ao procedimento de segurança nas docas do depósito. ..."}]},
+    {"filial":"TCG","responsavel":"Jose Oscar","anomalias":10,"planos":0,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-14","st":"Pendente","cat":"Divergência","desc":"Produtos misturados , alimentícios com outros produtos,que nao fazem parte do mesmo segmento. Gerand..."},{"dt":"2025-11-14","st":"Pendente","cat":"Avaria","desc":"Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na..."},{"dt":"2025-11-14","st":"Pendente","cat":"Avaria","desc":"Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na..."},{"dt":"2025-11-14","st":"Pendente","cat":"Avaria","desc":"Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na..."},{"dt":"2025-11-14","st":"Pendente","cat":"Avaria","desc":"Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na..."},{"dt":"2025-11-14","st":"Pendente","cat":"Avaria","desc":"Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na..."},{"dt":"2025-11-14","st":"Pendente","cat":"Avaria","desc":"Produtos com altos índices de avarias, constatado diariamente por falta de manuseio correto,devido a..."},{"dt":"2025-11-17","st":"Pendente","cat":"Avaria","desc":"REFERENTE REGISTRO DE BAIXA POR AVARIA 89278-263 DE 24OUT25 - Abertura de anomalia para que se justi..."},{"dt":"2025-11-22","st":"Pendente","cat":"Divergência","desc":"Gostaria de solicitar por gentileza, uma atenção redobrada quanto a organização dos produtos na oper..."},{"dt":"2025-11-24","st":"Pendente","cat":"Avaria","desc":"Produtos avaria interna Degustação indevida,manuseio incorreto,armazenamento impróprio...."}]},
+    {"filial":"TCG","responsavel":"Leonardo Rosa","anomalias":1,"planos":1,"status":"Concluído","diretoria":"Comercial","detalhes":[{"dt":"2025-10-30","st":"Concluído","cat":"Devolução","desc":"Motivo da Devolução: 5127 conta como: atraso da logistica. conforme relato no e-mail 30/10 enviado p..."}]},
+    {"filial":"TCG","responsavel":"Magno Souza","anomalias":4,"planos":5,"status":"Em Dia","diretoria":"Logistica","detalhes":[{"dt":"2025-10-31","st":"Em Dia","cat":"Avaria","desc":" Solicitante:LUANA FERREIRA  Justificativa: CONSUMO INDEVIDO E MANUSEIO INCORRETO INTERNO NA UNIDADE..."},{"dt":"2025-11-11","st":"Em Dia","cat":"Avaria","desc":"Solicitacao de baixa, avaria interna,devido a degustação indevida no interior da unidade,manuseio in..."},{"dt":"2025-11-11","st":"Concluído","cat":"Avaria","desc":"Segue solicitação de baixa, avarias por degustação indevida, armazenamento incorreto (fracionados), ..."},{"dt":"2025-11-13","st":"Em Dia","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TCG apresentou um total de R$ 3.829.517,77 em devol..."}]},
+    {"filial":"TCV","responsavel":"Carlos Eduardo da Silva Camargo","anomalias":1,"planos":1,"status":"Atrasado","diretoria":"Comercial","detalhes":[{"dt":"2025-11-12","st":"Atrasado","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TCV apresentou R$ 1.832.519,53 em devoluções, sendo..."}]},
+    {"filial":"TCV","responsavel":"Christian Miranda","anomalias":1,"planos":0,"status":"Concluído","diretoria":"Comercial","detalhes":[{"dt":"2025-11-10","st":"Concluído","cat":"Outros","desc":"teste- Validar o sistema SIG..."}]},
+    {"filial":"TCV","responsavel":"Graciele Patricia da Silva","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Financeiro","detalhes":[{"dt":"2025-11-25","st":"Pendente","cat":"Outros","desc":"Graciele, equipe de CPD realizou a baixa no sistema, pois a NF está anexa, porém não atualizou o sta..."}]},
+    {"filial":"TCV","responsavel":"Nei Lessak","anomalias":4,"planos":3,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-11","st":"Em Dia","cat":"Avaria","desc":"Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-33156-226, gentileza apresentar PLANO DE ..."},{"dt":"2025-11-11","st":"Em Dia","cat":"Avaria","desc":"Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-54086-345, gentileza apresentar PLANO DE ..."},{"dt":"2025-11-11","st":"Concluído","cat":"Avaria","desc":"Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-44754-763 , gentileza apresentar PLANO DE..."},{"dt":"2025-11-24","st":"Pendente","cat":"Outros","desc":"Constatação de ANOMALIA de SOBRAS, em 13NOV25, em TCV (REG 14653-624) que totalizou R$ 547,27, para ..."}]},
+    {"filial":"TPH","responsavel":"Gerusa Ribeiro","anomalias":1,"planos":4,"status":"Atrasado","diretoria":"Financeiro","detalhes":[{"dt":"2025-11-01","st":"Atrasado","cat":"Outros","desc":"Temos 3 boletos em aberto da Vancar, vencido no dia 30/10 e ainda não foi enviado para pagamento. ..."}]},
+    {"filial":"TPH","responsavel":"Laudinil Souza Penteado","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-13","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TPH apresentou R$ 4.071.314,62 em devoluções, com p..."}]},
+    {"filial":"TPH","responsavel":"Luiz Silva","anomalias":5,"planos":3,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-10-28","st":"Concluído","cat":"Fiscal/Financeiro","desc":"Em 28/10/2025 tiveram 06 notas da Química Amparo que foram informadas sem estarem incluídas no CAP, ..."},{"dt":"2025-11-10","st":"Concluído","cat":"Divergência","desc":"Identificado falha no processo de recebimento de cargas (conferência cega), onde a quantidade física..."},{"dt":"2025-11-14","st":"Pendente","cat":"Fiscal/Financeiro","desc":"Identificado notas fiscais de entrada lançadas sem o vínculo com o pedido de compra, gerando divergê..."},{"dt":"2025-11-18","st":"Pendente","cat":"Outros","desc":"Portão da doca 3 com problemas no motor, dificultando a operação de descarga. Necessário reparo urg..."},{"dt":"2025-11-19","st":"Pendente","cat":"Avaria","desc":"Identificado vazamento no telhado sobre a área de armazenagem de itens de alto valor (HPC). Risco de..."}]},
+    {"filial":"TPH","responsavel":"Magno Souza","anomalias":1,"planos":1,"status":"Em Dia","diretoria":"Logistica","detalhes":[{"dt":"2025-11-13","st":"Em Dia","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TPH apresentou um total de R$ 3.829.517,77 em devol..."}]},
+    {"filial":"TPH","responsavel":"Rodrigo Bertoni","anomalias":8,"planos":5,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-10-29","st":"Concluído","cat":"Vencimento/FEFO","desc":"Produtos de FEFO vencidos dentro do CD. Falta de ação comercial para venda ou transferência antes do..."},{"dt":"2025-10-31","st":"Concluído","cat":"Vencimento/FEFO","desc":"Produtos de FEFO vencidos dentro do CD..."},{"dt":"2025-10-31","st":"Pendente","cat":"Vencimento/FEFO","desc":"Produtos de FEFO vencidos dentro do CD..."},{"dt":"2025-11-04","st":"Concluído","cat":"Vencimento/FEFO","desc":"Produtos de FEFO vencidos dentro do CD..."},{"dt":"2025-11-07","st":"Concluído","cat":"Vencimento/FEFO","desc":"Produtos de FEFO vencidos dentro do CD..."},{"dt":"2025-11-13","st":"Pendente","cat":"Vencimento/FEFO","desc":"Produtos de FEFO vencidos dentro do CD..."},{"dt":"2025-11-13","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TPH apresentou R$ 3.829.517,77 em devoluções, sendo..."},{"dt":"2025-11-21","st":"Em Dia","cat":"Vencimento/FEFO","desc":"Tratando como chegamos a ter mais de 500 mil em produtos vencidos e ter mais de 300 mil em produtos ..."}]},
+    {"filial":"TPH","responsavel":"Ronaldo Crispim","anomalias":10,"planos":0,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-11","st":"Pendente","cat":"Divergência","desc":"Ajustes de estoque realizados sem justificativa clara no sistema WMS..."},{"dt":"2025-11-11","st":"Pendente","cat":"Divergência","desc":"Divergência de estoque no item 102030 (Arroz 5kg), físico maior que sistêmico..."},{"dt":"2025-11-11","st":"Pendente","cat":"Divergência","desc":"Divergência de estoque no item 405060 (Sabão em Pó), físico menor que sistêmico..."},{"dt":"2025-11-11","st":"Pendente","cat":"Avaria","desc":"Palete PBR quebrado na posição A-12-03, risco de queda de mercadoria..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Lixo acumulado no corredor 4, dificultando a passagem de empilhadeiras..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Extintor de incêndio da doca 2 com validade vencida..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Luz de emergência do setor de expedição queimada..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Empilhadeira 03 apresentando vazamento de óleo..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Transpaleteira manual 05 com roda travada..."},{"dt":"2025-11-11","st":"Pendente","cat":"Outros","desc":"Colaborador sem EPI (botina) na área operacional..."}]},
+    {"filial":"TSJ","responsavel":"Ana Cristina","anomalias":1,"planos":3,"status":"Em Dia","diretoria":"Comercial","detalhes":[{"dt":"2025-11-13","st":"Em Dia","cat":"Fiscal/Financeiro","desc":"Inadimplencia de cliente que tinha restrição de compra 1 - Por que?  R.: Foi liberado a venda, pois ..."}]},
+    {"filial":"TSJ","responsavel":"Carlos Saldanha","anomalias":7,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"Nota de Troca com Produto Fora do Prazo..."},{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"Nota de Troca com Produto Fora do Prazo..."},{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"Nota de Troca com Produto Fora do Prazo..."},{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"Nota de Troca com Produto Fora do Prazo..."},{"dt":"2025-10-30","st":"Pendente","cat":"Vencimento/FEFO","desc":"Nota de Troca com Produto Fora do Prazo..."},{"dt":"2025-11-04","st":"Pendente","cat":"Avaria","desc":"NF de trocas com produtos avariados..."},{"dt":"2025-11-18","st":"Pendente","cat":"Divergência","desc":"Nota de Troca com Produto a mais ..."}]},
+    {"filial":"TSJ","responsavel":"Cristiano Rodrigues","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-12","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade TSJ apresentou R$ 511.458,56 em devoluções, sendo a..."}]},
+    {"filial":"TSJ","responsavel":"Fabricio Ribeiro","anomalias":4,"planos":6,"status":"Em Dia","diretoria":"Logistica","detalhes":[{"dt":"2025-11-10","st":"Concluído","cat":"Outros","desc":"Sensor de presença do corredor 3 disparando aleatoriamente..."},{"dt":"2025-11-10","st":"Concluído","cat":"Outros","desc":"Portão automático da entrada principal travando..."},{"dt":"2025-11-11","st":"Em Dia","cat":"Outros","desc":"Vazamento na torneira do banheiro masculino..."},{"dt":"2025-11-12","st":"Concluído","cat":"Outros","desc":"Lâmpada do escritório queimada..."}]}
+];
+
         // =================================================================
-        const dadosBanco = [
-            {"filial": "ABC", "responsavel": "Missaid Mainardes", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade ABC apresentou R$ 1.050.735,23 em devoluções, sendo...", "status": "Pendente"}]},
-            {"filial": "ABC", "responsavel": "Nei Lessak", "anomalias": 3, "planos": 2, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-11", "cat": "Avaria", "desc": "Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-62208-543  , gentileza apresentar PLANO D...", "status": "Concluído"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-19233-716, gentileza apresentar PLANO DE ...", "status": "Concluído"}, {"data": "2025-11-24", "cat": "Avaria", "desc": "Constatação de ANOMALIA de AVARIAS, em 13NOV25, em ABC (REG 14653-624) que totalizou R$ 547,27, para...", "status": "Pendente"}]},
-            {"filial": "API", "responsavel": "Arildo Zago", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade API apresentou R$ 1.314.189,82 em devoluções, com p...", "status": "Pendente"}]},
-            {"filial": "API", "responsavel": "Magno Souza", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade API apresentou um total de R$ 1.314.189,82 em devol...", "status": "Concluído"}]},
-            {"filial": "API", "responsavel": "Marcos Nichelle", "anomalias": 2, "planos": 1, "status": "Atrasado", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "Produtos vencidos que estavam sendo sinalizados com antecedência para que ocorrerem ações de vendas ...", "status": "Atrasado"}, {"data": "2025-11-19", "cat": "Vencimento/FEFO", "desc": "Elaborar plano de ação para redução de vencidos...", "status": "Pendente"}]},
-            {"filial": "API", "responsavel": "Ronaldo Crispim", "anomalias": 2, "planos": 0, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-10-31", "cat": "Outros", "desc": "Ajustes de estoques constatados no inventario parcial que prrecisam de medidas tratativas ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Divergência/Estoque", "desc": "Solicitação de baixa de estoque, requer plano de ação para reduzir as ocorrências dessas faltas e so...", "status": "Pendente"}]},
-            {"filial": "MCD", "responsavel": "Ademir Lobato", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-11", "cat": "Outros", "desc": "O local apresenta uma grande quantidade de fezes de roedores, indicando infestação ativa. Essa condi...", "status": "Pendente"}]},
-            {"filial": "MCD", "responsavel": "Cleverson Kuba", "anomalias": 6, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-04", "cat": "Vencimento/FEFO", "desc": "Produtos  topei pacoca vencidos no estoque validade 01/11/2025...", "status": "Pendente"}, {"data": "2025-11-06", "cat": "Vencimento/FEFO", "desc": "produtos vencidos no  estoque por gentileza realizar processo de baixa...", "status": "Pendente"}, {"data": "2025-11-13", "cat": "Vencimento/FEFO", "desc": "produtos vencidos no  estoque solicito por gentileza a baixa do iterm ....", "status": "Pendente"}, {"data": "2025-11-14", "cat": "Devolução", "desc": "DANFE de devolução sem senha de devolução   ...", "status": "Pendente"}, {"data": "2025-11-14", "cat": "Devolução", "desc": "danfe de devolução  sem a senha  de devolução solicito apoio sobre o assunto ...", "status": "Pendente"}, {"data": "2025-11-17", "cat": "Vencimento/FEFO", "desc": "produto vencido no  estoque ...", "status": "Pendente"}]},
-            {"filial": "MCD", "responsavel": "Emanuel Boscolo", "anomalias": 1, "planos": 0, "status": "Concluído", "diretoria": "Financeiro", "detalhes": [{"data": "2025-11-05", "cat": "Outros", "desc": "Na data de hoje(05/11/2025), na Unidade de MCD, teve um pagamento para a DUCOCO ALIMENTOS SA, NF 187...", "status": "Concluído"}]},
-            {"filial": "MCD", "responsavel": "Fabio Rogerio", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade MCD apresentou R$ 4.221.881,60 em devoluções, sendo...", "status": "Pendente"}]},
-            {"filial": "MCD", "responsavel": "Jose Oscar", "anomalias": 15, "planos": 0, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-11", "cat": "Outros", "desc": "Encontrado roedor na carga de número 10427 durante o processo de carregamento.  ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Encontrado  na rua k  posição k005 um roedor esmagado ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Presença  do item colgate proteção  ativa misturados  com os demais  itens na posição o0040 ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Restos de equipe  descartado em local impróprio ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Produtos fracionados  fora do padrao  de organização  Gerando avarias ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Produto desorganizado no pick fora de padrão ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Palet ração no aéreo risco de queda ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Avaria colgate com outros itens em bom estado de venda ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Avarias no chão  em várias ruas de Mcd atraindo roedores pombos e moscas ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Placas de identificação  de rua no. Chão ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Avarias por consumo  indevido biscoito e batatas no final. Das. Ruasc...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Lixo e sujeira junto com produtos  fracionados Gerando avaria fora de padrão de organização ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Fezes de roedores,produtos avariado em meio a produtos em bom estado podendo contaminar ...", "status": "Pendente"}, {"data": "2025-11-16", "cat": "Outros", "desc": "Posições com risco de queda de produtos, pois esses produtos não estão alocados de forma correta no ...", "status": "Pendente"}, {"data": "2025-11-17", "cat": "Avaria", "desc": "sabonetes na rua N posição 57.0 molhando gerando avaria ...", "status": "Pendente"}]},
-            {"filial": "MCD", "responsavel": "Magno Souza", "anomalias": 1, "planos": 2, "status": "Em Dia", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade MCD apresentou um total de R$ 4.221.881,60 em devol...", "status": "Em Dia"}]},
-            {"filial": "TBE", "responsavel": "Jonas Portela", "anomalias": 1, "planos": 2, "status": "Em Dia", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-12", "cat": "Outros", "desc": "Saídas de Emergência - Solicitado Lacres. Uma das saídas, está obstruída....", "status": "Em Dia"}]},
-            {"filial": "TBE", "responsavel": "Kelly Pereira", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Gente", "detalhes": [{"data": "2025-10-30", "cat": "Outros", "desc": "Prezados,  Desde o dia 17/10/2025 estamos solicitando ao time de Gente e Gestão a lista de férias do...", "status": "Concluído"}]},
-            {"filial": "TBE", "responsavel": "Luis Fernando Feijo Ramos Junior", "anomalias": 2, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TBA apresentou R$ 830.282,30 em devoluções, sendo p...", "status": "Pendente"}, {"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TBE apresentou R$ 153.633,65 em devoluções, com pre...", "status": "Pendente"}]},
-            {"filial": "TBE", "responsavel": "Patricia Aline Sa Silva", "anomalias": 2, "planos": 3, "status": "Atrasado", "diretoria": "Financeiro", "detalhes": [{"data": "2025-10-30", "cat": "Outros", "desc": "Na data de hoje 30/10/2025, foi informado dois ACORDOS COMERCIAIS em TPA, que não foram incluídos no...", "status": "Atrasado"}, {"data": "2025-11-10", "cat": "Vencimento/FEFO", "desc": "Divergências nos pagamentos de TPA, na data de hoje 10/11/2025. A Unidade informou no DDA de TPA, um...", "status": "Atrasado"}]},
-            {"filial": "TBE", "responsavel": "Paulo Cholet", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TPA apresentou R$ 1.962.383,11 em devoluções, sendo...", "status": "Pendente"}]},
-            {"filial": "TBL", "responsavel": "Edson Bragato", "anomalias": 4, "planos": 2, "status": "Atrasado", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-10", "cat": "Avaria", "desc": "ASSUNTO: Avaria no ato da entrega ,chocolate derretido. CONSIDERANDO que devem ser tomados, pela Uni...", "status": "Atrasado"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Realizado rondas de 5s em todos os corredores do  deposito (Unidade TBL) e foi constatados produtos ...", "status": "Atrasado"}, {"data": "2025-11-19", "cat": "Vencimento/FEFO", "desc": "Produtos Vencidos no estoque FEFO...", "status": "Pendente"}, {"data": "2025-11-19", "cat": "Avaria", "desc": "Produtos com riscos de avarias fora das caixas...", "status": "Pendente"}]},
-            {"filial": "TBL", "responsavel": "Everton Silva", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TBL apresentou R$ 985.792,13 em devoluções, sendo a...", "status": "Pendente"}]},
-            {"filial": "TBL", "responsavel": "Idinéia Leite", "anomalias": 1, "planos": 3, "status": "Concluído", "diretoria": "Financeiro", "detalhes": [{"data": "2025-11-10", "cat": "Outros", "desc": "Encontrado desvio no processo de solicitação de baixa de estoque, onde um ajuste foi realizado após ...", "status": "Concluído"}]},
-            {"filial": "TBL", "responsavel": "Lucas Santana", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-29", "cat": "Vencimento/FEFO", "desc": "Cliente: Casa Vila Real  NF 11925  Valor NF.R$:.94,68  Obs: 22 Unid. De Água de Coco Puro Coco 200ml...", "status": "Pendente"}, {"data": "2025-10-29", "cat": "Vencimento/FEFO", "desc": "Cliente: Casa Vila Real  NF 11925  Valor NF.R$:.94,68  Obs: 22 Unid. De Água de Coco Puro Coco 200ml...", "status": "Pendente"}, {"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "Nota:.26796   Valor R$:. 1011,01 Valor Perda R$:. 71,37 Cliente:. MOLINS SUPERMERCADOS  PRODUTOS FOR...", "status": "Pendente"}, {"data": "2025-10-30", "cat": "Divergência/Estoque", "desc": "NOTA FISCAL Nº 19800 VALOR R$:. 653,27 CLIENTE:. MOLINS SUPERMERCADOS  MOTIVO: PRODUTOS DISCRIMINADO...", "status": "Pendente"}, {"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "NOTA FISCAL Nº 10025 VALOR R$:. 187,80 CLIENTE: M L XAVIER SUPERMERCADOS  MOTIVO: PRODUTOS FORA DO P...", "status": "Pendente"}, {"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "NOTA FISCAL Nº 8730 VALOR R$:. 259,24 CLIENTE: C R V ESTERO E CIA LTDA  MOTIVO: PRODUTOS FORA DO PRA...", "status": "Pendente"}, {"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "NOTA FISCAL Nº 11925 VALOR R$:. 94,68 VALOR PERDA R$:. 54,78 CLIENTE: CASA VILA REAL  MOTIVO: PRODUT...", "status": "Pendente"}]},
-            {"filial": "TBL", "responsavel": "Weverton Peixoto", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-06", "cat": "Outros", "desc": "No dia 06/11/2025 as 12h10min foi identificado o mau procedimento do colaborador Laércio (logística)...", "status": "Pendente"}]},
-            {"filial": "TCA", "responsavel": "Becher Barros", "anomalias": 21, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-03", "cat": "Divergência/Estoque", "desc": "NF DE TROCA COM FALTA DE PRODUTOS E FORA DO PADRÃO DE RECEBIMENTO (90 DIAS)....", "status": "Pendente"}, {"data": "2025-11-03", "cat": "Vencimento/FEFO", "desc": "NF DE TROCA N 15116 COM DIVERGÊNCIA CLIENTE: SANTOGO ALIMENTOS LTDA DIVERGÊNCIAS: FALTA DE PRODUTOS ...", "status": "Pendente"}, {"data": "2025-11-03", "cat": "Vencimento/FEFO", "desc": "NF DE TROCA N 15116 COM DIVERGÊNCIA CLIENTE: SANTOGO ALIMENTOS LTDA DIVERGÊNCIAS: FALTA DE PRODUTOS ...", "status": "Pendente"}, {"data": "2025-11-03", "cat": "Divergência/Estoque", "desc": "NF DE TROCA N 2662 COM DIVERGÊNCIA CLIENTE: TODO DIA LTDA  DIVERGÊNCIA: FALTA DE PRODUTO...", "status": "Pendente"}, {"data": "2025-11-03", "cat": "Divergência/Estoque", "desc": "NF DE TROCA N 2661 COM DIVERGÊNCIA CLIENTE: TODO DIA LTDA  DIVERGÊNCIA: FALTA DE PRODUTO...", "status": "Pendente"}, {"data": "2025-11-03", "cat": "Divergência/Estoque", "desc": "NFS DE TROCA N 40525, 40526, 40527, 40528, 40529, 40530 E 40531 COM DIVERGÊNCIAS. CLIENTE: TROPICAL ...", "status": "Pendente"}, {"data": "2025-11-07", "cat": "Divergência/Estoque", "desc": "NF DE TROCA FORA DO PADRÃO DE RECEBIMENTO CONSTA FALTA DE PRODUTOS APÓS AUDITORIA....", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Outros", "desc": "NF de troca 8352 Produtos fora do padrão de recebimento +60 dias...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Divergência/Estoque", "desc": "NF de troca - 1177 Falta de produtos...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "NF de troca - 8769 Produtos fora do prazo de recebimento + 60 dias...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "NF de troca - 39717 Produtos fora do prazo de recebimento +60 dias...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "NF de troca - 39716 Produtos fora do prazo de rebimento +60 dias...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "NF de troca - 39719 Produtos fora do prazo de recebimento + 60 dias...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "NF de troca - 39718 Produtos fora do prazo de recebimento +60 dias...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "NF de troca - 8766 Produtos fora do prazo de recebimento +60 dias/faltas...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Divergência/Estoque", "desc": "NF de troca - 24348 Produtos fora do padrão de recebimento - faltas...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Divergência/Estoque", "desc": "NF de troca - 310 Fora do padrão de recebimento - falta de produtos...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "NF de troca - 16263 Produto fora do prazo de recebimento + 60 dias...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "NF de troca - 66 Produto fora do prazo de recebimento +60 dias/faltas...", "status": "Pendente"}, {"data": "2025-11-21", "cat": "Vencimento/FEFO", "desc": "NF de troca 123692 Produtos com a validade fora do padrão de recebimento Datas: 2023/2024...", "status": "Pendente"}, {"data": "2025-11-21", "cat": "Vencimento/FEFO", "desc": "NF de troca 123694 Produtos com validade fora do padrão de recebimento. Datas: 2023/2024...", "status": "Pendente"}]},
-            {"filial": "TCA", "responsavel": "José Lima", "anomalias": 14, "planos": 9, "status": "Atrasado", "diretoria": "Logistica", "detalhes": [{"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "Produtos vencidos ainda presentes no pick Colaboradores já cientes do vencimento....", "status": "Atrasado"}, {"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "PRODUTO VENCIDO PRESENTE NO PICK COLABORADORES CIENTES DO VENCIMENTO...", "status": "Pendente"}, {"data": "2025-11-03", "cat": "Devolução", "desc": "Processo de conferência interrompido Conferente abandona devolução no meio da conferência após ser c...", "status": "Atrasado"}, {"data": "2025-11-03", "cat": "Outros", "desc": "Refrigerador com defeito, não faz degelo Acionar manutenção...", "status": "Atrasado"}, {"data": "2025-11-03", "cat": "Divergência/Estoque", "desc": "Falta de organização de picking Produtos fora das caixas ...", "status": "Atrasado"}, {"data": "2025-11-03", "cat": "Divergência/Estoque", "desc": "Produtos em caixa no chão...", "status": "Concluído"}, {"data": "2025-11-03", "cat": "Outros", "desc": "Paletes mal posicionados e sem strech no aéreo....", "status": "Atrasado"}, {"data": "2025-11-03", "cat": "Devolução", "desc": "Demora na alocação de produtos Ocupando espaço reservado para avarias/devolução....", "status": "Atrasado"}, {"data": "2025-11-07", "cat": "Avaria", "desc": "Avarias deixadas em local inapropriado, podendo atrair pombos/pragas. Sem formulário de avarias pree...", "status": "Atrasado"}, {"data": "2025-11-11", "cat": "Outros", "desc": "PRODUTOS FORA DAS CAIXAS ...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "PRODUTOS FORA DAS CAIXAS...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "PRODUTOS FORA DAS CAIXAS...", "status": "Pendente"}, {"data": "2025-11-19", "cat": "Outros", "desc": "Produto deixado no chão...", "status": "Pendente"}, {"data": "2025-11-19", "cat": "Outros", "desc": "Lâmpadas queimadas presentes em todas as docas, necessário manutenção...", "status": "Pendente"}]},
-            {"filial": "TCA", "responsavel": "Yasmin Silva", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TCA apresentou R$ 1.731.923,40 em devoluções, com p...", "status": "Pendente"}]},
-            {"filial": "TCG", "responsavel": "Cleverson Kuba", "anomalias": 26, "planos": 2, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "cat": "Devolução", "desc": "Notas de devolução sem pedido do cliente. Nfs: 14824 13628 13630 14262...", "status": "Concluído"}, {"data": "2025-10-30", "cat": "Devolução", "desc": "Notas de devolução sem senha. É de suma importância e necessário que os vendedores atendam e forneca...", "status": "Concluído"}, {"data": "2025-10-31", "cat": "Avaria", "desc": "Justificativa: CONSUMO INDEVIDO E MANUSEIO INCORRETO INTERNO NA UNIDADE POR PARTE DA OPERAÇAO SEGUE ...", "status": "Pendente"}, {"data": "2025-10-31", "cat": "Vencimento/FEFO", "desc": "SOLICITAÇÃO DE BAIXA  Justificativa: PRODUTO VENCIDO NO ESTOQUE  Unidade: TCG  Motivo: Vencimento  S...", "status": "Pendente"}, {"data": "2025-10-31", "cat": "Vencimento/FEFO", "desc": "Data da Solicitação: 2025-10-29  Solicitante: LUANA FERREIRA (PREVENÇÃO PERDAS)   Justificativa: PRO...", "status": "Pendente"}, {"data": "2025-11-03", "cat": "Devolução", "desc": "Nota de devolução,onde o cliente não solicitou o pedido. Segue evidências....", "status": "Pendente"}, {"data": "2025-11-03", "cat": "Fiscal/Financeiro", "desc": "Notas sem senha. Segue para averiguação as imagens das notas,e solicitação para que os vendedores at...", "status": "Pendente"}, {"data": "2025-11-03", "cat": "Fiscal/Financeiro", "desc": "Notas sem senha....", "status": "Pendente"}, {"data": "2025-11-04", "cat": "Vencimento/FEFO", "desc": "Solicitação de baixa referente a vencimento. Código: 14200111 Produto: Yokitos Anéis de Cebola 01x10...", "status": "Pendente"}, {"data": "2025-11-05", "cat": "Fiscal/Financeiro", "desc": "Notas sem senha. Motorista informa que os vendedores não estão atendendo para fornecer senhas....", "status": "Pendente"}, {"data": "2025-11-06", "cat": "Vencimento/FEFO", "desc": "produto vencido no estoque. Por gentileza solicito a baixa dos seguintes produtos, pois os mesmo ja ...", "status": "Pendente"}, {"data": "2025-11-10", "cat": "Fiscal/Financeiro", "desc": "Notas sem senha. Motoristas continuam afirmando que os vendedores não estão fornecendo a senha , poi...", "status": "Pendente"}, {"data": "2025-11-12", "cat": "Vencimento/FEFO", "desc": "Solicitação de baixa, produto vencido, dentro da unidade....", "status": "Pendente"}, {"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TCG apresentou R$ 3.829.517,77 em devoluções, com p...", "status": "Pendente"}, {"data": "2025-11-13", "cat": "Vencimento/FEFO", "desc": "Solicitação de baixa, por motivo de data de vencimento expirada. Segue evidencia, com código, descri...", "status": "Pendente"}, {"data": "2025-11-17", "cat": "Devolução", "desc": "Nota de devolução,onde o cliente não solicitau o pedido. Por gentileza seguir os padrões corretos,co...", "status": "Pendente"}, {"data": "2025-11-17", "cat": "Devolução", "desc": "Notas de devolução sem senha....", "status": "Pendente"}, {"data": "2025-11-19", "cat": "Fiscal/Financeiro", "desc": "Notas sem senha....", "status": "Pendente"}, {"data": "2025-11-19", "cat": "Fiscal/Financeiro", "desc": "Notas sem senha...", "status": "Pendente"}, {"data": "2025-11-19", "cat": "Fiscal/Financeiro", "desc": "Notas devolvidas devido ao cliente não ter solicitado o pedido. Total das notas=606,28 em pedidos na...", "status": "Pendente"}, {"data": "2025-11-19", "cat": "Vencimento/FEFO", "desc": "Fefo,solicitação de baixa produto com data expirada....", "status": "Pendente"}, {"data": "2025-11-19", "cat": "Vencimento/FEFO", "desc": "Produto vencido dentro da unidade,necessário baixa....", "status": "Pendente"}, {"data": "2025-11-22", "cat": "Vencimento/FEFO", "desc": "Produto vencido no estoque. Segue evidência para baixa....", "status": "Pendente"}, {"data": "2025-11-22", "cat": "Vencimento/FEFO", "desc": "Produto com data de vencimento expirada. Segue evidência para solicitação de baixa....", "status": "Pendente"}, {"data": "2025-11-24", "cat": "Fiscal/Financeiro", "desc": "Notas sem senha....", "status": "Pendente"}, {"data": "2025-11-24", "cat": "Devolução", "desc": "Notas devolução, cliente nao solicitou....", "status": "Pendente"}]},
-            {"filial": "TCG", "responsavel": "Ian Jantsch", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-25", "cat": "Divergência/Estoque", "desc": "Prezados, Refaço um alerta importante referente ao procedimento de segurança nas docas do depósito. ...", "status": "Pendente"}]},
-            {"filial": "TCG", "responsavel": "Jose Oscar", "anomalias": 10, "planos": 0, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-14", "cat": "Divergência/Estoque", "desc": "Produtos misturados , alimentícios com outros produtos,que nao fazem parte do mesmo segmento. Gerand...", "status": "Pendente"}, {"data": "2025-11-14", "cat": "Avaria", "desc": "Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na...", "status": "Pendente"}, {"data": "2025-11-14", "cat": "Avaria", "desc": "Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na...", "status": "Pendente"}, {"data": "2025-11-14", "cat": "Avaria", "desc": "Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na...", "status": "Pendente"}, {"data": "2025-11-14", "cat": "Avaria", "desc": "Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na...", "status": "Pendente"}, {"data": "2025-11-14", "cat": "Avaria", "desc": "Gostaria de forma cordial,uma revisão das condições de organização da unidade MCD E TCG,sendo que na...", "status": "Pendente"}, {"data": "2025-11-14", "cat": "Avaria", "desc": "Produtos com altos índices de avarias, constatado diariamente por falta de manuseio correto,devido a...", "status": "Pendente"}, {"data": "2025-11-17", "cat": "Avaria", "desc": "REFERENTE REGISTRO DE BAIXA POR AVARIA 89278-263 DE 24OUT25 - Abertura de anomalia para que se justi...", "status": "Pendente"}, {"data": "2025-11-22", "cat": "Divergência/Estoque", "desc": "Gostaria de solicitar por gentileza, uma atenção redobrada quanto a organização dos produtos na oper...", "status": "Pendente"}, {"data": "2025-11-24", "cat": "Avaria", "desc": "Produtos avaria interna Degustação indevida,manuseio incorreto,armazenamento impróprio....", "status": "Pendente"}]},
-            {"filial": "TCG", "responsavel": "Leonardo Rosa", "anomalias": 1, "planos": 1, "status": "Concluído", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "cat": "Devolução", "desc": "Motivo da Devolução: 5127 conta como: atraso da logistica. conforme relato no e-mail 30/10 enviado p...", "status": "Concluído"}]},
-            {"filial": "TCG", "responsavel": "Magno Souza", "anomalias": 4, "planos": 5, "status": "Em Dia", "diretoria": "Logistica", "detalhes": [{"data": "2025-10-31", "cat": "Avaria", "desc": " Solicitante:LUANA FERREIRA  Justificativa: CONSUMO INDEVIDO E MANUSEIO INCORRETO INTERNO NA UNIDADE...", "status": "Em Dia"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Solicitacao de baixa, avaria interna,devido a degustação indevida no interior da unidade,manuseio in...", "status": "Em Dia"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Segue solicitação de baixa, avarias por degustação indevida, armazenamento incorreto (fracionados), ...", "status": "Concluído"}, {"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TCG apresentou um total de R$ 3.829.517,77 em devol...", "status": "Em Dia"}]},
-            {"filial": "TCV", "responsavel": "Carlos Eduardo da Silva Camargo", "anomalias": 1, "planos": 1, "status": "Atrasado", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TCV apresentou R$ 1.832.519,53 em devoluções, sendo...", "status": "Atrasado"}]},
-            {"filial": "TCV", "responsavel": "Christian Miranda", "anomalias": 1, "planos": 0, "status": "Concluído", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-10", "cat": "Outros", "desc": "teste- Validar o sistema SIG...", "status": "Concluído"}]},
-            {"filial": "TCV", "responsavel": "Graciele Patricia da Silva", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Financeiro", "detalhes": [{"data": "2025-11-25", "cat": "Outros", "desc": "Graciele, equipe de CPD realizou a baixa no sistema, pois a NF está anexa, porém não atualizou o sta...", "status": "Pendente"}]},
-            {"filial": "TCV", "responsavel": "Nei Lessak", "anomalias": 4, "planos": 3, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-11", "cat": "Avaria", "desc": "Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-33156-226, gentileza apresentar PLANO DE ...", "status": "Em Dia"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-54086-345, gentileza apresentar PLANO DE ...", "status": "Em Dia"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-44754-763 , gentileza apresentar PLANO DE...", "status": "Concluído"}, {"data": "2025-11-24", "cat": "Outros", "desc": "Constatação de ANOMALIA de SOBRAS, em 13NOV25, em TCV (REG 14653-624) que totalizou R$ 547,27, para ...", "status": "Pendente"}]},
-            {"filial": "TPH", "responsavel": "Gerusa Ribeiro", "anomalias": 1, "planos": 4, "status": "Atrasado", "diretoria": "Financeiro", "detalhes": [{"data": "2025-11-01", "cat": "Outros", "desc": "Temos 3 boletos em aberto da Vancar, vencido no dia 30/10 e ainda não foi enviado para pagamento. ...", "status": "Atrasado"}]},
-            {"filial": "TPH", "responsavel": "Laudinil Souza Penteado", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TPH apresentou R$ 4.071.314,62 em devoluções, com p...", "status": "Pendente"}]},
-            {"filial": "TPH", "responsavel": "Luiz Silva", "anomalias": 5, "planos": 3, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-10-28", "cat": "Fiscal/Financeiro", "desc": "Em 28/10/2025 tiveram 06 notas da Química Amparo que foram informadas sem estarem incluídas no CAP, ...", "status": "Concluído"}, {"data": "2025-11-10", "cat": "Divergência/Estoque", "desc": "Identificado falha no processo de recebimento de cargas (conferência cega), onde a quantidade física...", "status": "Concluído"}, {"data": "2025-11-14", "cat": "Fiscal/Financeiro", "desc": "Identificado notas fiscais de entrada lançadas sem o vínculo com o pedido de compra, gerando divergê...", "status": "Pendente"}, {"data": "2025-11-18", "cat": "Outros", "desc": "Portão da doca 3 com problemas no motor, dificultando a operação de descarga. Necessário reparo urg...", "status": "Pendente"}, {"data": "2025-11-19", "cat": "Avaria", "desc": "Identificado vazamento no telhado sobre a área de armazenagem de itens de alto valor (HPC). Risco de...", "status": "Pendente"}]},
-            {"filial": "TPH", "responsavel": "Magno Souza", "anomalias": 1, "planos": 1, "status": "Em Dia", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TPH apresentou um total de R$ 3.829.517,77 em devol...", "status": "Em Dia"}]},
-            {"filial": "TPH", "responsavel": "Rodrigo Bertoni", "anomalias": 8, "planos": 5, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-29", "cat": "Vencimento/FEFO", "desc": "Produtos de FEFO vencidos dentro do CD. Falta de ação comercial para venda ou transferência antes do...", "status": "Concluído"}, {"data": "2025-10-31", "cat": "Vencimento/FEFO", "desc": "Produtos de FEFO vencidos dentro do CD...", "status": "Concluído"}, {"data": "2025-10-31", "cat": "Vencimento/FEFO", "desc": "Produtos de FEFO vencidos dentro do CD...", "status": "Pendente"}, {"data": "2025-11-04", "cat": "Vencimento/FEFO", "desc": "Produtos de FEFO vencidos dentro do CD...", "status": "Concluído"}, {"data": "2025-11-07", "cat": "Vencimento/FEFO", "desc": "Produtos de FEFO vencidos dentro do CD...", "status": "Concluído"}, {"data": "2025-11-13", "cat": "Vencimento/FEFO", "desc": "Produtos de FEFO vencidos dentro do CD...", "status": "Pendente"}, {"data": "2025-11-13", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TPH apresentou R$ 3.829.517,77 em devoluções, sendo...", "status": "Pendente"}, {"data": "2025-11-21", "cat": "Vencimento/FEFO", "desc": "Tratando como chegamos a ter mais de 500 mil em produtos vencidos e ter mais de 300 mil em produtos ...", "status": "Em Dia"}]},
-            {"filial": "TPH", "responsavel": "Ronaldo Crispim", "anomalias": 10, "planos": 0, "status": "Pendente", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-11", "cat": "Divergência/Estoque", "desc": "Ajustes de estoque realizados sem justificativa clara no sistema WMS...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Divergência/Estoque", "desc": "Divergência de estoque no item 102030 (Arroz 5kg), físico maior que sistêmico...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Divergência/Estoque", "desc": "Divergência de estoque no item 405060 (Sabão em Pó), físico menor que sistêmico...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Avaria", "desc": "Palete PBR quebrado na posição A-12-03, risco de queda de mercadoria...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Lixo acumulado no corredor 4, dificultando a passagem de empilhadeiras...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Extintor de incêndio da doca 2 com validade vencida...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Luz de emergência do setor de expedição queimada...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Empilhadeira 03 apresentando vazamento de óleo...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Transpaleteira manual 05 com roda travada...", "status": "Pendente"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Colaborador sem EPI (botina) na área operacional...", "status": "Pendente"}]},
-            {"filial": "TSJ", "responsavel": "Ana Cristina", "anomalias": 1, "planos": 3, "status": "Em Dia", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-13", "cat": "Fiscal/Financeiro", "desc": "Inadimplencia de cliente que tinha restrição de compra 1 - Por que?  R.: Foi liberado a venda, pois ...", "status": "Em Dia"}]},
-            {"filial": "TSJ", "responsavel": "Carlos Saldanha", "anomalias": 7, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "Nota de Troca com Produto Fora do Prazo...", "status": "Pendente"}, {"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "Nota de Troca com Produto Fora do Prazo...", "status": "Pendente"}, {"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "Nota de Troca com Produto Fora do Prazo...", "status": "Pendente"}, {"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "Nota de Troca com Produto Fora do Prazo...", "status": "Pendente"}, {"data": "2025-10-30", "cat": "Vencimento/FEFO", "desc": "Nota de Troca com Produto Fora do Prazo...", "status": "Pendente"}, {"data": "2025-11-04", "cat": "Avaria", "desc": "NF de trocas com produtos avariados...", "status": "Pendente"}, {"data": "2025-11-18", "cat": "Divergência/Estoque", "desc": "Nota de Troca com Produto a mais ...", "status": "Pendente"}]},
-            {"filial": "TSJ", "responsavel": "Cristiano Rodrigues", "anomalias": 1, "planos": 0, "status": "Pendente", "diretoria": "Comercial", "detalhes": [{"data": "2025-11-12", "cat": "Devolução", "desc": "No período de 01/01/2025 a 31/10/2025, a unidade TSJ apresentou R$ 511.458,56 em devoluções, sendo a...", "status": "Pendente"}]},
-            {"filial": "TSJ", "responsavel": "Fabricio Ribeiro", "anomalias": 4, "planos": 6, "status": "Em Dia", "diretoria": "Logistica", "detalhes": [{"data": "2025-11-10", "cat": "Outros", "desc": "Sensor de presença do corredor 3 disparando aleatoriamente...", "status": "Concluído"}, {"data": "2025-11-10", "cat": "Outros", "desc": "Portão automático da entrada principal travando...", "status": "Concluído"}, {"data": "2025-11-11", "cat": "Outros", "desc": "Vazamento na torneira do banheiro masculino...", "status": "Em Dia"}, {"data": "2025-11-12", "cat": "Outros", "desc": "Lâmpada do escritório queimada...", "status": "Concluído"}]}
-        ];
-        const CREDENCIAIS = {
+        // LÓGICA DE ACESSO
+        // =================================================================
+        
+        const CREDENCIAIS_DIR = {
             'admin': {pass:'admin123', view:'TODOS', name:'Administrador'},
             'ademir': {pass:'log123', view:'Logistica', name:'Ademir Lobato'},
             'saulo': {pass:'com123', view:'Comercial', name:'Saulo'},
@@ -195,33 +231,130 @@
             'luis': {pass:'prev123', view:'Prevencao', name:'Luís'}
         };
 
-        // --- LÓGICA ---
-        let usuarioAtual = null;
+        const PERMISSOES_CARGO = {
+            'log': ['Logistica'],
+            'com': ['Comercial'],
+            'adm': ['Financeiro', 'Gente'],
+            'geral': ['TODOS']
+        };
+
+        let perfilAtual = 'diretor';
+        let usuarioLogado = { filtro: null, tipo: null, depts: null };
+        let ordenacao = { col: 'anomalias', dir: 'desc' };
+
+        // Preencher unidades dinamicamente
+        const unidades = [...new Set(dadosBanco.map(d => d.filial))].sort();
+        const selU = document.getElementById('selUnidade');
+        unidades.forEach(u => {
+            let opt = document.createElement('option');
+            opt.value = u; opt.innerText = u;
+            selU.appendChild(opt);
+        });
+
+        function mudarPerfil(p) {
+            perfilAtual = p;
+            document.getElementById('errorMsg').style.display='none';
+            document.getElementById('btnDiretor').className = p==='diretor' ? 'toggle-btn active' : 'toggle-btn';
+            document.getElementById('btnGerente').className = p==='gerente' ? 'toggle-btn active' : 'toggle-btn';
+            document.getElementById('formDiretor').style.display = p==='diretor' ? 'block' : 'none';
+            document.getElementById('formGerente').style.display = p==='gerente' ? 'block' : 'none';
+        }
+
         function handleEnter(e) { if(e.key==='Enter') fazerLogin(); }
+
         function fazerLogin() {
-            const u = document.getElementById('user').value.toLowerCase().trim();
-            const p = document.getElementById('pass').value;
-            if(CREDENCIAIS[u] && CREDENCIAIS[u].pass === p) {
-                usuarioAtual = CREDENCIAIS[u];
-                document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('dashboardContainer').style.display = 'block';
-                document.getElementById('userBadge').innerText = usuarioAtual.name + (usuarioAtual.view !== 'TODOS' ? ` (${usuarioAtual.view})` : ' (Admin)');
-                renderizarDashboard(usuarioAtual.view);
+            if (perfilAtual === 'diretor') {
+                const u = document.getElementById('userDir').value.toLowerCase().trim();
+                const p = document.getElementById('passDir').value;
+                
+                if(CREDENCIAIS_DIR[u] && CREDENCIAIS_DIR[u].pass === p) {
+                    acessar(CREDENCIAIS_DIR[u].name, CREDENCIAIS_DIR[u].view, 'diretoria');
+                } else {
+                    document.getElementById('errorMsg').style.display='block';
+                }
             } else {
-                document.getElementById('errorMsg').style.display = 'block';
+                const unid = document.getElementById('selUnidade').value;
+                const cargo = document.getElementById('selCargo').value;
+                const p = document.getElementById('passGer').value;
+
+                if(!unid || !cargo) { alert('Selecione Unidade e Cargo'); return; }
+                
+                if(p === '1234') {
+                    const nome = document.getElementById('selCargo').options[document.getElementById('selCargo').selectedIndex].text;
+                    acessar(`${nome} - ${unid}`, unid, 'filial', PERMISSOES_CARGO[cargo]);
+                } else {
+                    document.getElementById('errorMsg').style.display='block';
+                }
             }
         }
+
+        function acessar(nome, filtro, tipo, depts = null) {
+            usuarioLogado = { filtro, tipo, depts };
+            
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            document.getElementById('userBadge').innerText = nome;
+
+            // Configura filtro visual de diretoria
+            const selDir = document.getElementById('filtroDiretoria');
+            if(tipo === 'filial') {
+                selDir.innerHTML = `<option>Filial: ${filtro}</option>`;
+                selDir.disabled = true;
+                selDir.style.background = '#eee';
+            } else {
+                selDir.innerHTML = `
+                    <option value="TODOS">-- Todas --</option>
+                    <option value="Logistica">Logística</option>
+                    <option value="Comercial">Comercial</option>
+                    <option value="Gente">Gente e Gestão</option>
+                    <option value="Financeiro">Financeiro</option>
+                    <option value="Prevencao">Prevenção</option>
+                `;
+                selDir.value = filtro;
+                if(filtro !== 'TODOS') {
+                    selDir.disabled = true; 
+                    selDir.style.background = '#eee';
+                }
+            }
+
+            renderizarDashboard();
+        }
+
         function logout() { location.reload(); }
 
-        let ordenacao = { col: 'anomalias', dir: 'desc' };
-        function renderizarDashboard(view) {
-            let dados = view === 'TODOS' ? [...dadosBanco] : dadosBanco.filter(d => d.diretoria === view);
+        function alterarFiltroDiretoria(val) {
+            usuarioLogado.filtro = val;
+            renderizarDashboard();
+        }
+
+        // =================================================================
+        // RENDERIZAÇÃO
+        // =================================================================
+
+        function renderizarDashboard() {
+            let dados;
+
+            if (usuarioLogado.tipo === 'diretoria') {
+                // DIRETOR
+                if (usuarioLogado.filtro === 'TODOS') dados = [...dadosBanco];
+                else dados = dadosBanco.filter(d => d.diretoria === usuarioLogado.filtro);
+            } else {
+                // GERENTE
+                dados = dadosBanco.filter(d => d.filial === usuarioLogado.filtro);
+                // Filtro por permissão de cargo (exceto Geral)
+                if (usuarioLogado.depts && !usuarioLogado.depts.includes('TODOS')) {
+                    dados = dados.filter(d => usuarioLogado.depts.includes(d.diretoria));
+                }
+            }
+
+            // Ordenação
             dados.sort((a,b) => {
                 let vA = a[ordenacao.col], vB = b[ordenacao.col];
                 if(typeof vA === 'string') return ordenacao.dir==='asc' ? vA.localeCompare(vB) : vB.localeCompare(vA);
                 return ordenacao.dir==='asc' ? vA - vB : vB - vA;
             });
 
+            // KPIs
             let total=0, pend=0, atrasado=0, conc=0;
             dados.forEach(d => {
                 total += d.anomalias;
@@ -234,6 +367,7 @@
             document.getElementById('kpiAtrasado').innerText = atrasado;
             document.getElementById('kpiConcluido').innerText = conc;
 
+            // Tabela
             const tbody = document.getElementById('tabelaCorpo');
             tbody.innerHTML = '';
             dados.forEach(d => {
@@ -241,7 +375,7 @@
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${d.filial}</strong></td>
-                    <td><a class="link-responsavel" onclick='abrirDetalhes(${JSON.stringify(d)})'>${d.responsavel}</a></td>
+                    <td><a class="link-nome" onclick='abrirDetalhes(${JSON.stringify(d)})'>${d.responsavel}</a></td>
                     <td style="text-align:center;">${d.anomalias}</td>
                     <td style="text-align:center;">${d.planos}</td>
                     <td style="text-align:center;"><span class="badge ${bg}">${d.status}</span></td>
@@ -249,6 +383,7 @@
                 `;
                 tbody.appendChild(tr);
             });
+
             renderizarGraficos(dados);
         }
 
@@ -258,11 +393,15 @@
                 let s = (d.status==='Em Dia' || d.status==='Concluído') ? 'Concluído' : d.status;
                 statusMap[s] += d.anomalias;
             });
+
             let ctxS = document.getElementById('chartStatus').getContext('2d');
             if(window.chartS instanceof Chart) window.chartS.destroy();
             window.chartS = new Chart(ctxS, {
                 type: 'doughnut',
-                data: { labels: Object.keys(statusMap), datasets: [{ data: Object.values(statusMap), backgroundColor: ['#dc3545','#fd7e14','#28a745'] }] },
+                data: {
+                    labels: Object.keys(statusMap),
+                    datasets: [{ data: Object.values(statusMap), backgroundColor: ['#dc3545','#fd7e14','#28a745'] }]
+                },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text:'Status Geral'} } }
             });
 
@@ -271,7 +410,10 @@
             if(window.chartR instanceof Chart) window.chartR.destroy();
             window.chartR = new Chart(ctxR, {
                 type: 'bar',
-                data: { labels: top.map(d => d.responsavel.split(' ')[0]), datasets: [{ label: 'Qtd', data: top.map(d => d.anomalias), backgroundColor: '#0056b3' }] },
+                data: {
+                    labels: top.map(d => d.responsavel.split(' ')[0]),
+                    datasets: [{ label: 'Qtd', data: top.map(d => d.anomalias), backgroundColor: '#0056b3' }]
+                },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Ofensores'} } }
             });
         }
@@ -279,7 +421,7 @@
         function ordenar(col) {
             ordenacao.dir = (ordenacao.col === col && ordenacao.dir === 'desc') ? 'asc' : 'desc';
             ordenacao.col = col;
-            renderizarDashboard(usuarioAtual.view);
+            renderizarDashboard();
         }
 
         function abrirDetalhes(item) {
@@ -287,6 +429,7 @@
             document.getElementById('modalSubtitulo').innerText = `${item.filial} | ${item.diretoria}`;
             const tbody = document.getElementById('modalCorpo');
             tbody.innerHTML = '';
+            
             item.detalhes.forEach(det => {
                 let badgeClass = det.status==='Pendente'?'bg-pendente':(det.status==='Concluído'?'bg-concluido':'bg-atrasado');
                 let tr = `<tr>
