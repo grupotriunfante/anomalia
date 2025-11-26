@@ -58,7 +58,7 @@
             <h2 style="color: #004085; margin-bottom: 20px;">Triunfante</h2>
             <p style="color: #666; margin-bottom: 20px;">Acesso Executivo</p>
             
-            <input type="text" id="user" class="login-input" placeholder="Usuário (ex: ademir)" onkeypress="handleEnter(event)">
+            <input type="text" id="user" class="login-input" placeholder="Usuário" onkeypress="handleEnter(event)">
             <input type="password" id="pass" class="login-input" placeholder="Senha" onkeypress="handleEnter(event)">
             
             <button class="login-btn" onclick="fazerLogin()">Entrar</button>
@@ -1106,23 +1106,7 @@ const dadosBanco = [
             }
         ]
     },
-    {
-        "filial": "TCG",
-        "responsavel": "Ian Jantsch",
-        "anomalias": 1,
-        "planos": 0,
-        "status": "Pendente",
-        "diretoria": "Logistica",
-        "detalhes": [
-            {
-                "data": "2025-11-25",
-                "cat": "Divergência/Estoque",
-                "desc": "Prezados, Refaço um alerta importante referente ao procedimento de segurança nas docas do depósito. ...",
-                "status": "Pendente"
-            }
-        ]
-    },
-    {
+       {
         "filial": "TCG",
         "responsavel": "Jose Oscar",
         "anomalias": 10,
@@ -1274,23 +1258,7 @@ const dadosBanco = [
             }
         ]
     },
-    {
-        "filial": "TCV",
-        "responsavel": "Graciele Patricia da Silva",
-        "anomalias": 1,
-        "planos": 0,
-        "status": "Pendente",
-        "diretoria": "Financeiro",
-        "detalhes": [
-            {
-                "data": "2025-11-25",
-                "cat": "Outros",
-                "desc": "Graciele, equipe de CPD realizou a baixa no sistema, pois a NF está anexa, porém não atualizou o sta...",
-                "status": "Pendente"
-            }
-        ]
-    },
-    {
+       {
         "filial": "TCV",
         "responsavel": "Nei Lessak",
         "anomalias": 4,
@@ -1657,7 +1625,316 @@ const dadosBanco = [
                 "status": "Concluído"
             }
         ]
+    },
+{
+        "filial": "ABC",
+        "responsavel": "Nei Lessak",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Logistica",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Outros",
+                "desc": "Ronda de risco de queda realizada na data de 25/11/2025, foi constatado no aéreo e sub aéreo vários ..."
+            }
+        ]
+    },
+    {
+        "filial": "API",
+        "responsavel": "Marcos Nichelle",
+        "anomalias": 1,
+        "planos": 1,
+        "status": "Em Dia",
+        "diretoria": "Comercial",
+        "detalhes": [
+            {
+                "dt": "2025-11-19",
+                "st": "Em Dia",
+                "cat": "Vencimento/FEFO",
+                "desc": "Elaborar plano de ação para redução de vencidos..."
+            }
+        ]
+    },
+    {
+        "filial": "CTD",
+        "responsavel": "Ademir Lobato",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Logistica",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Devolução",
+                "desc": "Ademir, abro a anomalia para movimentações que se encontram represadas na data de hoje. Peço apoio q..."
+            }
+        ]
+    },
+    {
+        "filial": "TBL",
+        "responsavel": "Edson Bragato",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Logistica",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Fiscal/Financeiro",
+                "desc": "Constatação de ANOMALIAS na entregas das mercadorias, na Unidade de TBL, para as quais solicitamos a..."
+            }
+        ]
+    },
+    {
+        "filial": "TBL",
+        "responsavel": "Idinéia Leite",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Financeiro",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Fiscal/Financeiro",
+                "desc": "Constatação de ANOMALIA no CAR de TBL: o título 14347401, no valor de R$ 243,00, emitido contra apre..."
+            }
+        ]
+    },
+    {
+        "filial": "TCG",
+        "responsavel": "Cleverson Kuba",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Comercial",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Vencimento/FEFO",
+                "desc": "Fefo Produtos vencidos dentro da unidade..."
+            }
+        ]
+    },
+    {
+        "filial": "TCG",
+        "responsavel": "Ian Jantsch",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Logistica",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Divergência",
+                "desc": "Prezados, Refaço um alerta importante referente ao procedimento de segurança nas docas do depósito. ..."
+            }
+        ]
+    },
+    {
+        "filial": "TCG",
+        "responsavel": "Jose Oscar",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Logistica",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Avaria",
+                "desc": "A desordem no setor esta gerando um número elevado de avarias. É fundamental que todos os colaborado..."
+            }
+        ]
+    },
+    {
+        "filial": "TCV",
+        "responsavel": "Graciele Patricia da Silva",
+        "anomalias": 2,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Financeiro",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Outros",
+                "desc": "Graciele, equipe de CPD realizou a baixa no sistema, pois a NF está anexa, porém não atualizou o sta..."
+            },
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Devolução",
+                "desc": "Constatação de ANOMALIAS na Unidade de TCV, para as quais solicito a vossa atenção e elaboração de p..."
+            }
+        ]
+    },
+    {
+        "filial": "TCV",
+        "responsavel": "Nei Lessak",
+        "anomalias": 3,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Logistica",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Outros",
+                "desc": "Rondas com riscos de quedas !! Produtos no aereo SACOS DE RAÇÃO 20KG SEM ESTAR STRECHADO..."
+            },
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Outros",
+                "desc": "Ronda de risco de queda !! Conforme ronda de risco de queda no aéreo e subaéreo foi constatado palet..."
+            },
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Fiscal/Financeiro",
+                "desc": "Constatação de ANOMALIAS na Unidade de TCV, para as quais solicito a tua atenção e elaboração do pla..."
+            }
+        ]
+    },
+    {
+        "filial": "TPH",
+        "responsavel": "Alexandre Lima",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Logistica",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Avaria",
+                "desc": "Avarias identificadas durante a separação, precisa de uma medida corretiva para evitá-las ..."
+            }
+        ]
+    },
+    {
+        "filial": "TPH",
+        "responsavel": "Gerusa Ribeiro",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Financeiro",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Devolução",
+                "desc": "Constatação de ANOMALIAS no CAR de TPH, para vossa ciência e confecção de plano de ação que vise a m..."
+            }
+        ]
+    },
+    {
+        "filial": "TPH",
+        "responsavel": "Rodrigo Bertoni",
+        "anomalias": 4,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Comercial",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Vencimento/FEFO",
+                "desc": "Mercadorias sendo faturadas vencidas aguardando autorizaçao para emissão de nota fiscal e posterior ..."
+            },
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Vencimento/FEFO",
+                "desc": "Mercadorias sendo faturadas vencidas aguardando autorizaçao para emissão de nota fiscal e posterior ..."
+            },
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Vencimento/FEFO",
+                "desc": "Mercadorias sendo faturadas vencidas aguardando autorizaçao para emissão de nota fiscal e posterior ..."
+            },
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Vencimento/FEFO",
+                "desc": "Mercadorias sendo faturadas vencidas aguardando autorizaçao para emissão de nota fiscal e posterior ..."
+            }
+        ]
+    },
+    {
+        "filial": "TPH",
+        "responsavel": "Rodrigo Bertoni",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Financeiro",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Vencimento/FEFO",
+                "desc": "Mercadorias vencidas que estavam sendo sinalizadas a meses para evitar as perdas, necessitam de um p..."
+            }
+        ]
+    },
+    {
+        "filial": "TPH",
+        "responsavel": "Ronaldo Crispim",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Logistica",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Fiscal/Financeiro",
+                "desc": "Constatação de ANOMALIAS na Unidade de TPH, referente as entregas das mercadorias, para vosso conhec..."
+            }
+        ]
+    },
+    {
+        "filial": "TSJ",
+        "responsavel": "Aldirene TSJ",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Financeiro",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Devolução",
+                "desc": "Constatação de ANOMALIAS no CAR da Unidade de TSJ, para conhecimento e elaboração de plano de ação q..."
+            }
+        ]
+    },
+    {
+        "filial": "TSJ",
+        "responsavel": "Fabricio Ribeiro",
+        "anomalias": 1,
+        "planos": 0,
+        "status": "Pendente",
+        "diretoria": "Logistica",
+        "detalhes": [
+            {
+                "dt": "2025-11-25",
+                "st": "Pendente",
+                "cat": "Fiscal/Financeiro",
+                "desc": "Constatação de ANOMALIAS nas entregas, na Unidade de TSJ, para conhecimento e confecção do plano de ..."
+            }
+        ]
     }
+
 ];
 
 // =================================================================
