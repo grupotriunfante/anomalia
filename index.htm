@@ -1660,184 +1660,197 @@ const dadosBanco = [
     }
 ];
 
-        // =================================================================
-        // LÓGICA DE ACESSO (DIRETORIA APENAS)
-        // =================================================================
+// =================================================================
+    // LÓGICA DE ACESSO (DIRETORIA APENAS) - CORRIGIDA
+    // =================================================================
+    
+    const CREDENCIAIS = {
+        'admin': {pass:'admin123', view:'TODOS', name:'Administrador'},
+        'ademir': {pass:'log123', view:'Logistica', name:'Ademir Lobato'},
+        'saulo': {pass:'com123', view:'Comercial', name:'Saulo'},
+        'ana': {pass:'rh123', view:'Gente', name:'Ana'},
+        'fagnes': {pass:'fin123', view:'Financeiro', name:'Fagnes'},
+        'luis': {pass:'prev123', view:'Prevencao', name:'Luís'}
+    };
+
+    let usuarioLogado = null;
+    let ordenacao = { col: 'anomalias', dir: 'desc' };
+
+    // Função para login com Enter
+    function handleEnter(e) { if(e.key==='Enter') fazerLogin(); }
+
+    function fazerLogin() {
+        const u = document.getElementById('user').value.toLowerCase().trim();
+        const p = document.getElementById('pass').value;
         
-        const CREDENCIAIS = {
-            'admin': {pass:'admin123', view:'TODOS', name:'Administrador'},
-            'ademir': {pass:'log123', view:'Logistica', name:'Ademir Lobato'},
-            'saulo': {pass:'com123', view:'Comercial', name:'Saulo'},
-            'ana': {pass:'rh123', view:'Gente', name:'Ana'},
-            'fagnes': {pass:'fin123', view:'Financeiro', name:'Fagnes'},
-            'luis': {pass:'prev123', view:'Prevencao', name:'Luís'}
-        };
+        if(CREDENCIAIS[u] && CREDENCIAIS[u].pass === p) {
+            acessar(CREDENCIAIS[u]);
+        } else {
+            document.getElementById('errorMsg').style.display='block';
+        }
+    }
 
-        let usuarioLogado = null;
-        let ordenacao = { col: 'anomalias', dir: 'desc' };
+    function acessar(user) {
+        usuarioLogado = user;
+        
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('dashboardContainer').style.display = 'block';
+        document.getElementById('userBadge').innerText = user.name;
 
-        function handleEnter(e) { if(e.key==='Enter') fazerLogin(); }
-
-        function fazerLogin() {
-            const u = document.getElementById('user').value.toLowerCase().trim();
-            const p = document.getElementById('pass').value;
-            
-            if(CREDENCIAIS[u] && CREDENCIAIS[u].pass === p) {
-                acessar(CREDENCIAIS[u]);
-            } else {
-                document.getElementById('errorMsg').style.display='block';
-            }
+        // Configura filtro visual de diretoria
+        const selDir = document.getElementById('filtroDiretoria');
+        selDir.innerHTML = `
+            <option value="TODOS">-- Visão Geral --</option>
+            <option value="Logistica">Logística</option>
+            <option value="Comercial">Comercial</option>
+            <option value="Gente">Gente e Gestão</option>
+            <option value="Financeiro">Financeiro</option>
+            <option value="Prevencao">Prevenção</option>
+        `;
+        
+        selDir.value = user.view;
+        
+        // Trava se não for Admin (TODOS)
+        if(user.view !== 'TODOS') {
+            selDir.disabled = true; 
+            selDir.style.background = '#eee';
+            selDir.style.color = '#555';
         }
 
-        function acessar(user) {
-            usuarioLogado = user;
-            
-            document.getElementById('loginOverlay').style.display = 'none';
-            document.getElementById('dashboardContainer').style.display = 'block';
-            document.getElementById('userBadge').innerText = user.name;
+        renderizarDashboard();
+    }
 
-            // Configura filtro visual de diretoria
-            const selDir = document.getElementById('filtroDiretoria');
-            selDir.innerHTML = `
-                <option value="TODOS">-- Visão Geral --</option>
-                <option value="Logistica">Logística</option>
-                <option value="Comercial">Comercial</option>
-                <option value="Gente">Gente e Gestão</option>
-                <option value="Financeiro">Financeiro</option>
-                <option value="Prevencao">Prevenção</option>
+    function logout() { location.reload(); }
+
+    function alterarFiltroDiretoria(val) {
+        // Só Admin consegue usar isso
+        usuarioLogado.view = val;
+        renderizarDashboard();
+    }
+
+    // =================================================================
+    // RENDERIZAÇÃO
+    // =================================================================
+
+    function renderizarDashboard() {
+        let dados;
+
+        // Filtra pela visão do usuário (ou seleção do admin)
+        if (usuarioLogado.view === 'TODOS') {
+            dados = [...dadosBanco];
+        } else {
+            dados = dadosBanco.filter(d => d.diretoria === usuarioLogado.view);
+        }
+
+        // Ordenação
+        dados.sort((a,b) => {
+            let vA = a[ordenacao.col], vB = b[ordenacao.col];
+            if(typeof vA === 'string') return ordenacao.dir==='asc' ? vA.localeCompare(vB) : vB.localeCompare(vA);
+            return ordenacao.dir==='asc' ? vA - vB : vB - vA;
+        });
+
+        // KPIs
+        let total=0, pend=0, atrasado=0, conc=0;
+        dados.forEach(d => {
+            total += d.anomalias;
+            if(d.status==='Pendente') pend+=d.anomalias;
+            else if(d.status==='Atrasado') atrasado+=d.anomalias;
+            else conc+=d.anomalias;
+        });
+        document.getElementById('kpiTotal').innerText = total;
+        document.getElementById('kpiPendente').innerText = pend;
+        document.getElementById('kpiAtrasado').innerText = atrasado;
+        document.getElementById('kpiConcluido').innerText = conc;
+
+        // Tabela
+        const tbody = document.getElementById('tabelaCorpo');
+        tbody.innerHTML = '';
+        dados.forEach(d => {
+            let bg = d.status==='Em Dia'?'bg-concluido':(d.status==='Atrasado'?'bg-atrasado':(d.status==='Concluído'?'bg-concluido':'bg-pendente'));
+            // O truque para o botão funcionar é passar o objeto 'd' corretamente
+            // Vamos usar uma função auxiliar para evitar erros de aspas no HTML
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${d.filial}</strong></td>
+                <td><a class="link-nome" onclick='prepararModal(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${d.responsavel}</a></td>
+                <td style="text-align:center;">${d.anomalias}</td>
+                <td style="text-align:center;">${d.planos}</td>
+                <td style="text-align:center;"><span class="badge ${bg}">${d.status}</span></td>
+                <td><button onclick='prepararModal(${JSON.stringify(d).replace(/'/g, "&#39;")})' style="cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px;">🔍 Ver</button></td>
             `;
+            tbody.appendChild(tr);
+        });
+
+        renderizarGraficos(dados);
+    }
+
+    function renderizarGraficos(dados) {
+        let statusMap = {'Pendente':0, 'Atrasado':0, 'Concluído':0};
+        dados.forEach(d => {
+            let s = (d.status==='Em Dia' || d.status==='Concluído') ? 'Concluído' : d.status;
+            statusMap[s] += d.anomalias;
+        });
+
+        let ctxS = document.getElementById('chartStatus').getContext('2d');
+        if(window.chartS instanceof Chart) window.chartS.destroy();
+        window.chartS = new Chart(ctxS, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(statusMap),
+                datasets: [{ data: Object.values(statusMap), backgroundColor: ['#dc3545','#fd7e14','#28a745'] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text:'Status Geral'} } }
+        });
+
+        let top = [...dados].sort((a,b) => b.anomalias - a.anomalias).slice(0, 5);
+        let ctxR = document.getElementById('chartResponsavel').getContext('2d');
+        if(window.chartR instanceof Chart) window.chartR.destroy();
+        window.chartR = new Chart(ctxR, {
+            type: 'bar',
+            data: {
+                labels: top.map(d => d.responsavel.split(' ')[0]),
+                datasets: [{ label: 'Qtd', data: top.map(d => d.anomalias), backgroundColor: '#0056b3' }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Ofensores'} } }
+        });
+    }
+
+    function ordenar(col) {
+        ordenacao.dir = (ordenacao.col === col && ordenacao.dir === 'desc') ? 'asc' : 'desc';
+        ordenacao.col = col;
+        renderizarDashboard();
+    }
+
+    // Função Intermediária para lidar com o click
+    function prepararModal(item) {
+        abrirDetalhes(item);
+    }
+
+    function abrirDetalhes(item) {
+        document.getElementById('modalTitulo').innerText = item.responsavel;
+        document.getElementById('modalSubtitulo').innerText = `${item.filial} | ${item.diretoria}`;
+        const tbody = document.getElementById('modalCorpo');
+        tbody.innerHTML = '';
+        
+        item.detalhes.forEach(det => {
+            // AQUI ESTAVA O ERRO: dt em vez de data, st em vez de status
+            let dataExibicao = det.dt || det.data; // Tenta dt (novo) ou data (antigo)
+            let statusExibicao = det.st || det.status;
             
-            selDir.value = user.view;
-            
-            // Trava se não for Admin (TODOS)
-            if(user.view !== 'TODOS') {
-                selDir.disabled = true; 
-                selDir.style.background = '#eee';
-                selDir.style.color = '#555';
-            }
+            let badgeClass = statusExibicao==='Pendente'?'bg-pendente':(statusExibicao==='Concluído'?'bg-concluido':'bg-atrasado');
+            let tr = `<tr>
+                <td>${dataExibicao}</td>
+                <td><span class="badge ${badgeClass}">${statusExibicao}</span></td>
+                <td><span class="cat-tag">${det.cat}</span></td>
+                <td style="color:#666;">${det.desc}</td>
+            </tr>`;
+            tbody.innerHTML += tr;
+        });
+        document.getElementById('detalhesModal').style.display = 'block';
+    }
 
-            renderizarDashboard();
-        }
-
-        function logout() { location.reload(); }
-
-        function alterarFiltroDiretoria(val) {
-            // Só Admin consegue usar isso
-            usuarioLogado.view = val;
-            renderizarDashboard();
-        }
-
-        // =================================================================
-        // RENDERIZAÇÃO
-        // =================================================================
-
-        function renderizarDashboard() {
-            let dados;
-
-            // Filtra pela visão do usuário (ou seleção do admin)
-            if (usuarioLogado.view === 'TODOS') {
-                dados = [...dadosBanco];
-            } else {
-                dados = dadosBanco.filter(d => d.diretoria === usuarioLogado.view);
-            }
-
-            // Ordenação
-            dados.sort((a,b) => {
-                let vA = a[ordenacao.col], vB = b[ordenacao.col];
-                if(typeof vA === 'string') return ordenacao.dir==='asc' ? vA.localeCompare(vB) : vB.localeCompare(vA);
-                return ordenacao.dir==='asc' ? vA - vB : vB - vA;
-            });
-
-            // KPIs
-            let total=0, pend=0, atrasado=0, conc=0;
-            dados.forEach(d => {
-                total += d.anomalias;
-                if(d.status==='Pendente') pend+=d.anomalias;
-                else if(d.status==='Atrasado') atrasado+=d.anomalias;
-                else conc+=d.anomalias;
-            });
-            document.getElementById('kpiTotal').innerText = total;
-            document.getElementById('kpiPendente').innerText = pend;
-            document.getElementById('kpiAtrasado').innerText = atrasado;
-            document.getElementById('kpiConcluido').innerText = conc;
-
-            // Tabela
-            const tbody = document.getElementById('tabelaCorpo');
-            tbody.innerHTML = '';
-            dados.forEach(d => {
-                let bg = d.status==='Em Dia'?'bg-concluido':(d.status==='Atrasado'?'bg-atrasado':(d.status==='Concluído'?'bg-concluido':'bg-pendente'));
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${d.filial}</strong></td>
-                    <td><a class="link-nome" onclick='abrirDetalhes(${JSON.stringify(d)})'>${d.responsavel}</a></td>
-                    <td style="text-align:center;">${d.anomalias}</td>
-                    <td style="text-align:center;">${d.planos}</td>
-                    <td style="text-align:center;"><span class="badge ${bg}">${d.status}</span></td>
-                    <td><button onclick='abrirDetalhes(${JSON.stringify(d)})' style="cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px;">🔍 Ver</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            renderizarGraficos(dados);
-        }
-
-        function renderizarGraficos(dados) {
-            let statusMap = {'Pendente':0, 'Atrasado':0, 'Concluído':0};
-            dados.forEach(d => {
-                let s = (d.status==='Em Dia' || d.status==='Concluído') ? 'Concluído' : d.status;
-                statusMap[s] += d.anomalias;
-            });
-
-            let ctxS = document.getElementById('chartStatus').getContext('2d');
-            if(window.chartS instanceof Chart) window.chartS.destroy();
-            window.chartS = new Chart(ctxS, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(statusMap),
-                    datasets: [{ data: Object.values(statusMap), backgroundColor: ['#dc3545','#fd7e14','#28a745'] }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text:'Status Geral'} } }
-            });
-
-            let top = [...dados].sort((a,b) => b.anomalias - a.anomalias).slice(0, 5);
-            let ctxR = document.getElementById('chartResponsavel').getContext('2d');
-            if(window.chartR instanceof Chart) window.chartR.destroy();
-            window.chartR = new Chart(ctxR, {
-                type: 'bar',
-                data: {
-                    labels: top.map(d => d.responsavel.split(' ')[0]),
-                    datasets: [{ label: 'Qtd', data: top.map(d => d.anomalias), backgroundColor: '#0056b3' }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Ofensores'} } }
-            });
-        }
-
-        function ordenar(col) {
-            ordenacao.dir = (ordenacao.col === col && ordenacao.dir === 'desc') ? 'asc' : 'desc';
-            ordenacao.col = col;
-            renderizarDashboard();
-        }
-
-        function abrirDetalhes(item) {
-            document.getElementById('modalTitulo').innerText = item.responsavel;
-            document.getElementById('modalSubtitulo').innerText = `${item.filial} | ${item.diretoria}`;
-            const tbody = document.getElementById('modalCorpo');
-            tbody.innerHTML = '';
-            
-            item.detalhes.forEach(det => {
-                let badgeClass = det.status==='Pendente'?'bg-pendente':(det.status==='Concluído'?'bg-concluido':'bg-atrasado');
-                let tr = `<tr>
-                    <td>${det.data}</td>
-                    <td><span class="badge ${badgeClass}">${det.status}</span></td>
-                    <td><span class="cat-tag">${det.cat}</span></td>
-                    <td style="color:#666;">${det.desc}</td>
-                </tr>`;
-                tbody.innerHTML += tr;
-            });
-            document.getElementById('detalhesModal').style.display = 'block';
-        }
-        function fecharModal() { document.getElementById('detalhesModal').style.display = 'none'; }
-        window.onclick = function(e) { if(e.target == document.getElementById('detalhesModal')) fecharModal(); }
-    </script>
+    function fecharModal() { document.getElementById('detalhesModal').style.display = 'none'; }
+    window.onclick = function(e) { if(e.target == document.getElementById('detalhesModal')) fecharModal(); }
+</script>
 </body>
 </html>
