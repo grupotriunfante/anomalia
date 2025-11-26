@@ -8,29 +8,23 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
         
-        /* TELA DE LOGIN */
+        /* TELA DE LOGIN (Simplificada) */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .login-box { background: white; padding: 40px; border-radius: 12px; width: 380px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
-        .login-input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
+        .login-box { background: white; padding: 40px; border-radius: 12px; width: 350px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
+        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
         .login-btn { width: 100%; padding: 12px; background: #0056b3; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
         .login-btn:hover { background: #004494; }
         
-        /* Botões de Alternância (Diretor/Gerente) */
-        .toggle-container { display: flex; background: #eee; border-radius: 8px; margin-bottom: 20px; padding: 4px; }
-        .toggle-btn { flex: 1; padding: 10px; border: none; background: transparent; cursor: pointer; border-radius: 6px; font-weight: 600; color: #666; transition: 0.3s; }
-        .toggle-btn.active { background: #fff; color: #0056b3; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-
-        /* JANELA DE DETALHES (MODAL) */
+        /* MODAL DE DETALHES */
         #detalhesModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(3px); }
         .modal-content { background-color: #fff; margin: 5% auto; padding: 25px; border-radius: 10px; width: 85%; max-width: 950px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
         .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
         .close-btn:hover { color: #333; }
 
-        /* DASHBOARD - CABEÇALHO */
+        /* DASHBOARD */
         .header { background: #fff; padding: 20px 30px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 5px solid #0056b3; }
         .header h1 { margin: 0; font-size: 24px; color: #004085; }
         
-        /* KPIS (CARTÕES) */
         .kpi-container { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
         .kpi-card { flex: 1; min-width: 200px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border-left: 5px solid #ccc; }
         .kpi-card h3 { margin: 0 0 10px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
@@ -45,7 +39,6 @@
         td { padding: 12px 15px; border-bottom: 1px solid #f1f1f1; font-size: 14px; vertical-align: middle; }
         tr:hover { background-color: #f8f9fa; }
         
-        /* BADGES E TAGS */
         .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; color: #fff; display: inline-block; min-width: 80px; text-align: center; }
         .bg-pendente { background-color: #dc3545; } .bg-atrasado { background-color: #fd7e14; } .bg-concluido { background-color: #28a745; }
         
@@ -63,33 +56,13 @@
     <div id="loginOverlay">
         <div class="login-box">
             <h2 style="color: #004085; margin-bottom: 20px;">Triunfante</h2>
+            <p style="color: #666; margin-bottom: 20px;">Acesso Executivo</p>
             
-            <div class="toggle-container">
-                <button id="btnDiretor" class="toggle-btn active" onclick="mudarPerfil('diretor')">Diretoria</button>
-                <button id="btnGerente" class="toggle-btn" onclick="mudarPerfil('gerente')">Gerente/Coord.</button>
-            </div>
-
-            <div id="formDiretor">
-                <input type="text" id="userDir" class="login-input" placeholder="Usuário (ex: ademir)" onkeypress="handleEnter(event)">
-                <input type="password" id="passDir" class="login-input" placeholder="Senha" onkeypress="handleEnter(event)">
-            </div>
-
-            <div id="formGerente" style="display:none;">
-                <select id="selUnidade" class="login-input">
-                    <option value="">Selecione a Unidade...</option>
-                </select>
-                <select id="selCargo" class="login-input">
-                    <option value="">Selecione seu Cargo...</option>
-                    <option value="log">Gerente de Logística</option>
-                    <option value="com">Gerente Comercial</option>
-                    <option value="adm">Coord. Administrativo/Financeiro</option>
-                    <option value="geral">Gerente Geral (Visão Completa)</option>
-                </select>
-                <input type="password" id="passGer" class="login-input" placeholder="Senha (Padrão: 1234)" onkeypress="handleEnter(event)">
-            </div>
-
-            <button class="login-btn" onclick="fazerLogin()">Acessar Painel</button>
-            <p id="errorMsg" style="color: red; font-size: 13px; margin-top: 15px; display: none;">Dados incorretos.</p>
+            <input type="text" id="user" class="login-input" placeholder="Usuário (ex: ademir)" onkeypress="handleEnter(event)">
+            <input type="password" id="pass" class="login-input" placeholder="Senha" onkeypress="handleEnter(event)">
+            
+            <button class="login-btn" onclick="fazerLogin()">Entrar</button>
+            <p id="errorMsg" style="color: red; font-size: 13px; margin-top: 15px; display: none;">Usuário ou senha inválidos.</p>
         </div>
     </div>
 
@@ -168,12 +141,12 @@
 
     <script>
 
-        // =================================================================
-// BANCO DE DADOS COMPLETO (200 REGISTROS)
+// =================================================================
+// PARTE 2: DADOS COMPLETOS (200 REGISTROS PROCESSADOS)
 // =================================================================
 const dadosBanco = [
     {"filial":"ABC","responsavel":"Missaid Mainardes","anomalias":1,"planos":4,"status":"Em Dia","diretoria":"Comercial","detalhes":[{"dt":"2025-11-12","st":"Em Dia","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade ABC apresentou R$ 1.050.735,23 em devoluções, sendo..."}]},
-    {"filial":"ABC","responsavel":"Nei Lessak","anomalias":3,"planos":2,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-11","st":"Concluído","cat":"Avaria","desc":"Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-62208-543  , gentileza apresentar PLANO D..."},{"dt":"2025-11-11","st":"Concluído","cat":"Avaria","desc":"Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-19233-716, gentileza apresentar PLANO DE ..."},{"dt":"2025-11-24","st":"Pendente","cat":"Avaria","desc":"Constatação de ANOMALIA de AVARIAS, em 13NOV25, em ABC (REG 14653-624) que totalizou R$ 547,27, para..."}]},
+    {"filial":"ABC","responsavel":"Nei Lessak","anomalias":4,"planos":2,"status":"Pendente","diretoria":"Logistica","detalhes":[{"dt":"2025-11-11","st":"Concluído","cat":"Avaria","desc":"Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-62208-543  , gentileza apresentar PLANO D..."},{"dt":"2025-11-11","st":"Concluído","cat":"Avaria","desc":"Referente SOLICITACAO DE BAIXA DE ESTOQUE POR AVARIA - REG-19233-716, gentileza apresentar PLANO DE ..."},{"dt":"2025-11-24","st":"Pendente","cat":"Avaria","desc":"Constatação de ANOMALIA de AVARIAS, em 13NOV25, em ABC (REG 14653-624) que totalizou R$ 547,27, para..."},{"dt":"2025-11-24","st":"Pendente","cat":"Divergência","desc":"Constatação de ANOMALIA de SOBRAS, em 13NOV25, em ABC (REG 14653-624) que totalizou R$ 547,27, para ..."}]},
     {"filial":"API","responsavel":"Arildo Zago","anomalias":1,"planos":0,"status":"Pendente","diretoria":"Comercial","detalhes":[{"dt":"2025-11-13","st":"Pendente","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade API apresentou R$ 1.314.189,82 em devoluções, com p..."}]},
     {"filial":"API","responsavel":"Magno Souza","anomalias":1,"planos":1,"status":"Concluído","diretoria":"Logistica","detalhes":[{"dt":"2025-11-13","st":"Concluído","cat":"Devolução","desc":"No período de 01/01/2025 a 31/10/2025, a unidade API apresentou um total de R$ 1.314.189,82 em devol..."}]},
     {"filial":"API","responsavel":"Marcos Nichelle","anomalias":2,"planos":1,"status":"Atrasado","diretoria":"Comercial","detalhes":[{"dt":"2025-11-12","st":"Atrasado","cat":"Vencimento/FEFO","desc":"Produtos vencidos que estavam sendo sinalizados com antecedência para que ocorrerem ações de vendas ..."},{"dt":"2025-11-19","st":"Pendente","cat":"Vencimento/FEFO","desc":"Elaborar plano de ação para redução de vencidos..."}]},
@@ -219,10 +192,10 @@ const dadosBanco = [
 ];
 
         // =================================================================
-        // LÓGICA DE ACESSO
+        // LÓGICA DE ACESSO (DIRETORIA APENAS)
         // =================================================================
         
-        const CREDENCIAIS_DIR = {
+        const CREDENCIAIS = {
             'admin': {pass:'admin123', view:'TODOS', name:'Administrador'},
             'ademir': {pass:'log123', view:'Logistica', name:'Ademir Lobato'},
             'saulo': {pass:'com123', view:'Comercial', name:'Saulo'},
@@ -231,90 +204,47 @@ const dadosBanco = [
             'luis': {pass:'prev123', view:'Prevencao', name:'Luís'}
         };
 
-        const PERMISSOES_CARGO = {
-            'log': ['Logistica'],
-            'com': ['Comercial'],
-            'adm': ['Financeiro', 'Gente'],
-            'geral': ['TODOS']
-        };
-
-        let perfilAtual = 'diretor';
-        let usuarioLogado = { filtro: null, tipo: null, depts: null };
+        let usuarioLogado = null;
         let ordenacao = { col: 'anomalias', dir: 'desc' };
-
-        // Preencher unidades dinamicamente
-        const unidades = [...new Set(dadosBanco.map(d => d.filial))].sort();
-        const selU = document.getElementById('selUnidade');
-        unidades.forEach(u => {
-            let opt = document.createElement('option');
-            opt.value = u; opt.innerText = u;
-            selU.appendChild(opt);
-        });
-
-        function mudarPerfil(p) {
-            perfilAtual = p;
-            document.getElementById('errorMsg').style.display='none';
-            document.getElementById('btnDiretor').className = p==='diretor' ? 'toggle-btn active' : 'toggle-btn';
-            document.getElementById('btnGerente').className = p==='gerente' ? 'toggle-btn active' : 'toggle-btn';
-            document.getElementById('formDiretor').style.display = p==='diretor' ? 'block' : 'none';
-            document.getElementById('formGerente').style.display = p==='gerente' ? 'block' : 'none';
-        }
 
         function handleEnter(e) { if(e.key==='Enter') fazerLogin(); }
 
         function fazerLogin() {
-            if (perfilAtual === 'diretor') {
-                const u = document.getElementById('userDir').value.toLowerCase().trim();
-                const p = document.getElementById('passDir').value;
-                
-                if(CREDENCIAIS_DIR[u] && CREDENCIAIS_DIR[u].pass === p) {
-                    acessar(CREDENCIAIS_DIR[u].name, CREDENCIAIS_DIR[u].view, 'diretoria');
-                } else {
-                    document.getElementById('errorMsg').style.display='block';
-                }
+            const u = document.getElementById('user').value.toLowerCase().trim();
+            const p = document.getElementById('pass').value;
+            
+            if(CREDENCIAIS[u] && CREDENCIAIS[u].pass === p) {
+                acessar(CREDENCIAIS[u]);
             } else {
-                const unid = document.getElementById('selUnidade').value;
-                const cargo = document.getElementById('selCargo').value;
-                const p = document.getElementById('passGer').value;
-
-                if(!unid || !cargo) { alert('Selecione Unidade e Cargo'); return; }
-                
-                if(p === '1234') {
-                    const nome = document.getElementById('selCargo').options[document.getElementById('selCargo').selectedIndex].text;
-                    acessar(`${nome} - ${unid}`, unid, 'filial', PERMISSOES_CARGO[cargo]);
-                } else {
-                    document.getElementById('errorMsg').style.display='block';
-                }
+                document.getElementById('errorMsg').style.display='block';
             }
         }
 
-        function acessar(nome, filtro, tipo, depts = null) {
-            usuarioLogado = { filtro, tipo, depts };
+        function acessar(user) {
+            usuarioLogado = user;
             
             document.getElementById('loginOverlay').style.display = 'none';
             document.getElementById('dashboardContainer').style.display = 'block';
-            document.getElementById('userBadge').innerText = nome;
+            document.getElementById('userBadge').innerText = user.name;
 
             // Configura filtro visual de diretoria
             const selDir = document.getElementById('filtroDiretoria');
-            if(tipo === 'filial') {
-                selDir.innerHTML = `<option>Filial: ${filtro}</option>`;
-                selDir.disabled = true;
+            selDir.innerHTML = `
+                <option value="TODOS">-- Visão Geral --</option>
+                <option value="Logistica">Logística</option>
+                <option value="Comercial">Comercial</option>
+                <option value="Gente">Gente e Gestão</option>
+                <option value="Financeiro">Financeiro</option>
+                <option value="Prevencao">Prevenção</option>
+            `;
+            
+            selDir.value = user.view;
+            
+            // Trava se não for Admin (TODOS)
+            if(user.view !== 'TODOS') {
+                selDir.disabled = true; 
                 selDir.style.background = '#eee';
-            } else {
-                selDir.innerHTML = `
-                    <option value="TODOS">-- Todas --</option>
-                    <option value="Logistica">Logística</option>
-                    <option value="Comercial">Comercial</option>
-                    <option value="Gente">Gente e Gestão</option>
-                    <option value="Financeiro">Financeiro</option>
-                    <option value="Prevencao">Prevenção</option>
-                `;
-                selDir.value = filtro;
-                if(filtro !== 'TODOS') {
-                    selDir.disabled = true; 
-                    selDir.style.background = '#eee';
-                }
+                selDir.style.color = '#555';
             }
 
             renderizarDashboard();
@@ -323,7 +253,8 @@ const dadosBanco = [
         function logout() { location.reload(); }
 
         function alterarFiltroDiretoria(val) {
-            usuarioLogado.filtro = val;
+            // Só Admin consegue usar isso
+            usuarioLogado.view = val;
             renderizarDashboard();
         }
 
@@ -334,17 +265,11 @@ const dadosBanco = [
         function renderizarDashboard() {
             let dados;
 
-            if (usuarioLogado.tipo === 'diretoria') {
-                // DIRETOR
-                if (usuarioLogado.filtro === 'TODOS') dados = [...dadosBanco];
-                else dados = dadosBanco.filter(d => d.diretoria === usuarioLogado.filtro);
+            // Filtra pela visão do usuário (ou seleção do admin)
+            if (usuarioLogado.view === 'TODOS') {
+                dados = [...dadosBanco];
             } else {
-                // GERENTE
-                dados = dadosBanco.filter(d => d.filial === usuarioLogado.filtro);
-                // Filtro por permissão de cargo (exceto Geral)
-                if (usuarioLogado.depts && !usuarioLogado.depts.includes('TODOS')) {
-                    dados = dados.filter(d => usuarioLogado.depts.includes(d.diretoria));
-                }
+                dados = dadosBanco.filter(d => d.diretoria === usuarioLogado.view);
             }
 
             // Ordenação
