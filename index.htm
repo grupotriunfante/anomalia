@@ -41,6 +41,7 @@
         .bg-atrasado { background-color: #fd7e14; }
         .bg-concluido { background-color: #28a745; }
         
+        /* Tabela Modal */
         .tabela-detalhe { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .tabela-detalhe th { background: #0056b3; color: white; padding: 10px; font-size: 13px; }
         .tabela-detalhe td { border: 1px solid #dee2e6; padding: 10px; font-size: 13px; vertical-align: top; }
@@ -55,10 +56,15 @@
         <div class="login-box">
             <h2 style="color: #004085;">Triunfante</h2>
             <p style="color: #666; margin-bottom: 20px;">Acesso Executivo</p>
-            <input type="text" id="user" class="login-input" placeholder="Usuário" onkeypress="handleEnter(event)">
+            <input type="text" id="user" class="login-input" placeholder="Usuário (ex: ademir)" onkeypress="handleEnter(event)">
             <input type="password" id="pass" class="login-input" placeholder="Senha" onkeypress="handleEnter(event)">
             <button class="login-btn" onclick="fazerLogin()">Entrar</button>
             <p id="errorMsg" style="color: red; font-size: 13px; margin-top: 10px; display: none;">Dados incorretos.</p>
+            <div style="margin-top: 15px; font-size: 12px; color: #aaa;">
+                Senhas para teste:<br>
+                ademir (log123) | saulo (com123)<br>
+                ana (rh123) | fagnes (fin123)
+            </div>
         </div>
     </div>
 
@@ -73,8 +79,8 @@
                         <tr>
                             <th width="15%">Data</th>
                             <th width="10%">Status</th>
-                            <th width="30%">Motivo (Auto)</th>
-                            <th width="45%">Descrição Original</th>
+                            <th width="30%">Motivo (Automática)</th>
+                            <th width="45%">Descrição Original (Banco)</th>
                         </tr>
                     </thead>
                     <tbody id="modalCorpo"></tbody>
@@ -85,7 +91,10 @@
 
     <div id="dashboardContainer" style="display: none;">
         <div class="header">
-            <div><h1>Dashboard de Anomalias</h1><small style="color: #666;">Monitoramento e Tratativas</small></div>
+            <div>
+                <h1>Dashboard de Anomalias</h1>
+                <small style="color: #666;">Monitoramento e Tratativas</small>
+            </div>
             <div style="display: flex; gap: 10px; align-items: center;">
                 <span id="userBadge" style="background: #e9ecef; padding: 5px 10px; border-radius: 4px; font-weight: bold; color: #555;"></span>
                 <button onclick="logout()" style="padding: 8px 15px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer;">Sair</button>
@@ -100,8 +109,12 @@
         </div>
 
         <div class="charts-row" style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <div class="table-container" style="flex: 1; min-width: 300px; height: 350px;"><canvas id="chartStatus"></canvas></div>
-            <div class="table-container" style="flex: 1; min-width: 300px; height: 350px;"><canvas id="chartResponsavel"></canvas></div>
+            <div class="table-container" style="flex: 1; min-width: 300px; height: 350px;">
+                <canvas id="chartStatus"></canvas>
+            </div>
+            <div class="table-container" style="flex: 1; min-width: 300px; height: 350px;">
+                <canvas id="chartResponsavel"></canvas>
+            </div>
         </div>
 
         <div class="table-container">
