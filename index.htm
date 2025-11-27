@@ -1833,38 +1833,20 @@ const dadosBanco = [
         let ordenacao = { col: 'anomalias', dir: 'desc' };
 
         // --- FUNÇÃO INTELIGENTE DE CATEGORIZAÇÃO ---
-        // Aqui está a mágica para eliminar o "Outros"
         function classificarMotivo(desc) {
             let d = desc.toLowerCase();
-
-            // 1. Segurança e Riscos (Prioridade Alta)
             if (d.includes('queda') || d.includes('risco') || d.includes('strech') || d.includes('segurança') || d.includes('doca')) return 'Risco de Segurança / Queda';
-            
-            // 2. Pragas e Limpeza
             if (d.includes('roedor') || d.includes('praga') || d.includes('sujeira') || d.includes('limpeza') || d.includes('higiene')) return 'Controle de Pragas / Higiene';
-
-            // 3. Divergências (Faltas e Sobras)
             if (d.includes('diverg') || d.includes('falta') || d.includes('sobra') || d.includes('contagem') || d.includes('inventário') || d.includes('estoque')) return 'Divergência de Estoque';
-
-            // 4. Vencimentos (FEFO)
             if (d.includes('venc') || d.includes('fefo') || d.includes('validade') || d.includes('prazo')) return 'Produto Vencido / FEFO';
-
-            // 5. Avarias Físicas
             if (d.includes('avaria') || d.includes('quebra') || d.includes('danificado') || d.includes('derretido') || d.includes('consumo')) return 'Avaria / Danos';
-
-            // 6. Problemas Fiscais e Financeiros
             if (d.includes('fiscal') || d.includes('boleto') || d.includes('pagamento') || d.includes('título') || d.includes('cap') || d.includes('car')) return 'Pendência Financeira / Fiscal';
-
-            // 7. Devoluções e Trocas
             if (d.includes('devol') || d.includes('troca') || d.includes('recus') || d.includes('retorno')) {
                 if (d.includes('nf')) return 'Divergência em NF de Troca';
                 return 'Devolução de Cliente';
             }
-
-            // 8. Se não achar nada específico, tenta categorizar por palavras soltas ou mantém genérico
             if (d.includes('nota') || d.includes('nf')) return 'Pendência de Nota Fiscal';
-            
-            return 'Processo Operacional'; // Nome mais bonito que "Outros"
+            return 'Processo Operacional';
         }
 
         function handleEnter(e) { if(e.key==='Enter') fazerLogin(); }
@@ -1872,7 +1854,6 @@ const dadosBanco = [
         function fazerLogin() {
             const u = document.getElementById('user').value.toLowerCase().trim();
             const p = document.getElementById('pass').value;
-            
             if(CREDENCIAIS[u] && CREDENCIAIS[u].pass === p) {
                 acessar(CREDENCIAIS[u]);
             } else {
@@ -1894,7 +1875,6 @@ const dadosBanco = [
                 selDir.disabled = true; 
                 selDir.style.background = '#eee';
             }
-
             renderizarDashboard();
         }
 
@@ -1928,7 +1908,6 @@ const dadosBanco = [
             tbody.innerHTML = '';
             dados.forEach(d => {
                 let bg = d.status==='Em Dia'?'bg-concluido':(d.status==='Atrasado'?'bg-atrasado':(d.status==='Concluído'?'bg-concluido':'bg-pendente'));
-                // TRUQUE: Substitui aspas simples por código HTML para não quebrar o botão
                 let jsonItem = JSON.stringify(d).replace(/'/g, "&#39;");
                 
                 let tr = document.createElement('tr');
@@ -1947,28 +1926,22 @@ const dadosBanco = [
         }
 
         function renderizarGraficos(dados) {
-            // 1. Status
             let statusMap = {'Pendente':0, 'Atrasado':0, 'Concluído':0};
-            
-            // 2. Motivos (Agora usando a função inteligente)
             let motivosMap = {};
 
             dados.forEach(d => {
                 let s = (d.status==='Em Dia' || d.status==='Concluído') ? 'Concluído' : d.status;
                 statusMap[s] += d.anomalias;
 
-                // Classifica cada detalhe
-                d.detalhes.forEach(det => {
-                    // Usa a função classificarMotivo na descrição para encontrar a causa real
-                    let motivoReal = classificarMotivo(det.desc);
-                    motivosMap[motivoReal] = (motivosMap[motivoReal] || 0) + 1;
-                });
+                if(d.detalhes){
+                    d.detalhes.forEach(det => {
+                        let m = classificarMotivo(det.desc);
+                        motivosMap[m] = (motivosMap[m] || 0) + 1;
+                    });
+                }
             });
 
-            // Ordenar Motivos
             let topMotivos = Object.entries(motivosMap).sort((a,b) => b[1] - a[1]).slice(0, 5);
-            
-            // Ordenar Ofensores
             let topOfensores = [...dados].sort((a,b) => b.anomalias - a.anomalias).slice(0, 5);
 
             // --- Gráfico 1: Status ---
@@ -1976,41 +1949,55 @@ const dadosBanco = [
             if(window.chartS instanceof Chart) window.chartS.destroy();
             window.chartS = new Chart(ctxS, {
                 type: 'doughnut',
-                data: { labels: Object.keys(statusMap), datasets: [{ data: Object.values(statusMap), backgroundColor: ['#dc3545','#fd7e14','#28a745'] }] },
+                data: {
+                    labels: Object.keys(statusMap),
+                    datasets: [{ data: Object.values(statusMap), backgroundColor: ['#dc3545','#fd7e14','#28a745'] }]
+                },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text:'Status Geral'} } }
             });
 
-            // --- Gráfico 2: Responsáveis ---
+            // --- Gráfico 2: Responsáveis (CORRIGIDO: Mostra Nome Completo) ---
             let ctxR = document.getElementById('chartResponsavel').getContext('2d');
             if(window.chartR instanceof Chart) window.chartR.destroy();
             window.chartR = new Chart(ctxR, {
                 type: 'bar',
-                data: { labels: topOfensores.map(d => d.responsavel.split(' ')[0]), datasets: [{ label: 'Qtd', data: topOfensores.map(d => d.anomalias), backgroundColor: '#0056b3' }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Ofensores'} } }
+                data: {
+                    // AQUI FOI FEITA A ALTERAÇÃO: usamos d.responsavel direto, sem split
+                    labels: topOfensores.map(d => d.responsavel), 
+                    datasets: [{ 
+                        label: 'Qtd', 
+                        data: topOfensores.map(d => d.anomalias), 
+                        backgroundColor: '#0056b3' 
+                    }]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Ofensores'} } 
+                }
             });
 
-            // --- Gráfico 3: Motivos (Inteligente) ---
-            // Verifica se o canvas existe na Parte 1 (se não existir, não quebra)
+            // --- Gráfico 3: Motivos ---
             let canvasM = document.getElementById('chartMotivos');
             if (canvasM) {
                 let ctxM = canvasM.getContext('2d');
                 if(window.chartM instanceof Chart) window.chartM.destroy();
                 window.chartM = new Chart(ctxM, {
                     type: 'bar',
-                    data: { 
-                        labels: topMotivos.map(m => m[0]), 
-                        datasets: [{ 
-                            label: 'Ocorrências', 
-                            data: topMotivos.map(m => m[1]), 
-                            backgroundColor: '#17a2b8', 
-                            borderRadius: 4 
-                        }] 
+                    data: {
+                        labels: topMotivos.map(m => m[0]),
+                        datasets: [{
+                            label: 'Ocorrências',
+                            data: topMotivos.map(m => m[1]),
+                            backgroundColor: '#17a2b8',
+                            borderRadius: 4
+                        }]
                     },
-                    options: { 
-                        indexAxis: 'y', 
-                        responsive: true, 
-                        maintainAspectRatio: false, 
-                        plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Motivos (Causa Raiz)'} } 
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Motivos (Causa Raiz)'} }
                     }
                 });
             }
@@ -2029,11 +2016,9 @@ const dadosBanco = [
             item.detalhes.forEach(det => {
                 let dt = det.dt || det.data;
                 let st = det.st || det.status;
-                
-                // Aplica a mesma classificação inteligente no modal também
                 let motivoInteligente = classificarMotivo(det.desc);
-
                 let badgeClass = st==='Pendente'?'bg-pendente':(st==='Concluído'?'bg-concluido':'bg-atrasado');
+                
                 let tr = `<tr>
                     <td>${dt}</td>
                     <td><span class="badge ${badgeClass}">${st}</span></td>
