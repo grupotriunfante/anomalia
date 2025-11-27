@@ -8,20 +8,20 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
         
-        /* TELA DE LOGIN (Simplificada) */
+        /* LOGIN */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; }
         .login-box { background: white; padding: 40px; border-radius: 12px; width: 350px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
-        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
-        .login-btn { width: 100%; padding: 12px; background: #0056b3; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .login-input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+        .login-btn { width: 100%; padding: 12px; background: #0056b3; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
         .login-btn:hover { background: #004494; }
         
-        /* MODAL DE DETALHES */
+        /* MODAL */
         #detalhesModal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(3px); }
         .modal-content { background-color: #fff; margin: 5% auto; padding: 25px; border-radius: 10px; width: 85%; max-width: 950px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
         .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
         .close-btn:hover { color: #333; }
 
-        /* DASHBOARD */
+        /* LAYOUT */
         .header { background: #fff; padding: 20px 30px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 5px solid #0056b3; }
         .header h1 { margin: 0; font-size: 24px; color: #004085; }
         
@@ -29,10 +29,8 @@
         .kpi-card { flex: 1; min-width: 200px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border-left: 5px solid #ccc; }
         .kpi-card h3 { margin: 0 0 10px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         .kpi-card .value { font-size: 38px; font-weight: 700; color: #333; }
-        .kpi-blue { border-left-color: #007bff; } .kpi-red { border-left-color: #dc3545; } 
-        .kpi-orange { border-left-color: #fd7e14; } .kpi-green { border-left-color: #28a745; }
+        .kpi-blue { border-color: #007bff; } .kpi-red { border-color: #dc3545; } .kpi-orange { border-color: #fd7e14; } .kpi-green { border-color: #28a745; }
 
-        /* TABELAS */
         .table-container { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); overflow-x: auto; margin-top: 20px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
         th { padding: 15px; text-align: left; background: #f8f9fa; color: #555; font-weight: 700; border-bottom: 2px solid #e9ecef; cursor: pointer; }
@@ -55,14 +53,12 @@
 
     <div id="loginOverlay">
         <div class="login-box">
-            <h2 style="color: #004085; margin-bottom: 20px;">Triunfante</h2>
+            <h2 style="color: #004085;">Triunfante</h2>
             <p style="color: #666; margin-bottom: 20px;">Acesso Executivo</p>
-            
             <input type="text" id="user" class="login-input" placeholder="Usuário" onkeypress="handleEnter(event)">
             <input type="password" id="pass" class="login-input" placeholder="Senha" onkeypress="handleEnter(event)">
-            
             <button class="login-btn" onclick="fazerLogin()">Entrar</button>
-            <p id="errorMsg" style="color: red; font-size: 13px; margin-top: 15px; display: none;">Usuário ou senha inválidos.</p>
+            <p id="errorMsg" style="color: red; font-size: 13px; margin-top: 10px; display: none;">Dados incorretos.</p>
         </div>
     </div>
 
@@ -73,14 +69,7 @@
             <p id="modalSubtitulo" style="color: #666; margin: 0 0 20px 0;"></p>
             <div style="overflow-x: auto; max-height: 400px;">
                 <table class="tabela-detalhe">
-                    <thead>
-                        <tr>
-                            <th width="12%">Data</th>
-                            <th width="10%">Status</th>
-                            <th width="25%">Motivo (Auto)</th>
-                            <th width="53%">Descrição Original</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th width="12%">Data</th><th width="10%">Status</th><th width="25%">Motivo</th><th width="53%">Descrição Original</th></tr></thead>
                     <tbody id="modalCorpo"></tbody>
                 </table>
             </div>
@@ -89,10 +78,7 @@
 
     <div id="dashboardContainer" style="display: none;">
         <div class="header">
-            <div>
-                <h1>Dashboard de Anomalias</h1>
-                <small style="color: #666;">Monitoramento e Tratativas</small>
-            </div>
+            <div><h1>Dashboard de Anomalias</h1><small style="color: #666;">Monitoramento e Tratativas</small></div>
             <div style="display: flex; gap: 15px; align-items: center;">
                 <span id="userBadge" style="background: #e9ecef; padding: 6px 12px; border-radius: 4px; font-weight: bold; color: #555; font-size: 14px;"></span>
                 <button onclick="logout()" style="padding: 8px 15px; border: 1px solid #ccc; background: white; border-radius: 4px; cursor: pointer; font-weight: bold;">Sair</button>
@@ -113,27 +99,18 @@
             <div class="table-container" style="flex: 1; min-width: 300px; height: 380px; margin-top:0;">
                 <canvas id="chartResponsavel"></canvas>
             </div>
+            <div class="table-container" style="flex: 1; min-width: 300px; height: 380px; margin-top:0;">
+                <canvas id="chartMotivos"></canvas> </div>
         </div>
 
         <div class="table-container">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="margin: 0; color: #444;">📋 Visão Detalhada</h3>
-                <select id="filtroDiretoria" onchange="alterarFiltroDiretoria(this.value)" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-                </select>
+                <select id="filtroDiretoria" onchange="alterarFiltroDiretoria(this.value)" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;"></select>
             </div>
             <p style="font-size: 13px; color: #888; margin-top: 5px;">*Clique no nome para ver detalhes.</p>
-            
             <table style="margin-top: 15px;">
-                <thead>
-                    <tr>
-                        <th onclick="ordenar('filial')">Filial ↕</th>
-                        <th onclick="ordenar('responsavel')">Responsável ↕</th>
-                        <th onclick="ordenar('anomalias')" style="text-align: center;">Anomalias ↕</th>
-                        <th onclick="ordenar('planos')" style="text-align: center;">Planos ↕</th>
-                        <th onclick="ordenar('status')" style="text-align: center;">Status Geral ↕</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
+                <thead><tr><th onclick="ordenar('filial')">Filial ↕</th><th onclick="ordenar('responsavel')">Responsável ↕</th><th onclick="ordenar('anomalias')" style="text-align: center;">Anomalias ↕</th><th onclick="ordenar('planos')" style="text-align: center;">Planos ↕</th><th onclick="ordenar('status')" style="text-align: center;">Status Geral ↕</th><th>Ação</th></tr></thead>
                 <tbody id="tabelaCorpo"></tbody>
             </table>
         </div>
@@ -1838,198 +1815,239 @@ const dadosBanco = [
         ]
     }
 ];
-        
+
 // =================================================================
-    // LÓGICA DE ACESSO (DIRETORIA APENAS) - CORRIGIDA
-    // =================================================================
-    
-    const CREDENCIAIS = {
-        'admin': {pass:'admin123', view:'TODOS', name:'Administrador'},
-        'ademir': {pass:'log123', view:'Logistica', name:'Ademir Lobato'},
-        'saulo': {pass:'com123', view:'Comercial', name:'Saulo'},
-        'ana': {pass:'rh123', view:'Gente', name:'Ana'},
-        'fagnes': {pass:'fin123', view:'Financeiro', name:'Fagnes'},
-        'luis': {pass:'prev123', view:'Prevencao', name:'Luís'}
-    };
-
-    let usuarioLogado = null;
-    let ordenacao = { col: 'anomalias', dir: 'desc' };
-
-    // Função para login com Enter
-    function handleEnter(e) { if(e.key==='Enter') fazerLogin(); }
-
-    function fazerLogin() {
-        const u = document.getElementById('user').value.toLowerCase().trim();
-        const p = document.getElementById('pass').value;
+        // LÓGICA DE ACESSO
+        // =================================================================
         
-        if(CREDENCIAIS[u] && CREDENCIAIS[u].pass === p) {
-            acessar(CREDENCIAIS[u]);
-        } else {
-            document.getElementById('errorMsg').style.display='block';
-        }
-    }
+        const CREDENCIAIS = {
+            'admin': {pass:'admin123', view:'TODOS', name:'Administrador'},
+            'ademir': {pass:'log123', view:'Logistica', name:'Ademir Lobato'},
+            'saulo': {pass:'com123', view:'Comercial', name:'Saulo'},
+            'ana': {pass:'rh123', view:'Gente', name:'Ana'},
+            'fagnes': {pass:'fin123', view:'Financeiro', name:'Fagnes'},
+            'luis': {pass:'prev123', view:'Prevencao', name:'Luís'}
+        };
 
-    function acessar(user) {
-        usuarioLogado = user;
-        
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('dashboardContainer').style.display = 'block';
-        document.getElementById('userBadge').innerText = user.name;
+        let usuarioLogado = null;
+        let ordenacao = { col: 'anomalias', dir: 'desc' };
 
-        // Configura filtro visual de diretoria
-        const selDir = document.getElementById('filtroDiretoria');
-        selDir.innerHTML = `
-            <option value="TODOS">-- Visão Geral --</option>
-            <option value="Logistica">Logística</option>
-            <option value="Comercial">Comercial</option>
-            <option value="Gente">Gente e Gestão</option>
-            <option value="Financeiro">Financeiro</option>
-            <option value="Prevencao">Prevenção</option>
-        `;
-        
-        selDir.value = user.view;
-        
-        // Trava se não for Admin (TODOS)
-        if(user.view !== 'TODOS') {
-            selDir.disabled = true; 
-            selDir.style.background = '#eee';
-            selDir.style.color = '#555';
-        }
+        // --- FUNÇÃO INTELIGENTE DE CATEGORIZAÇÃO ---
+        // Aqui está a mágica para eliminar o "Outros"
+        function classificarMotivo(desc) {
+            let d = desc.toLowerCase();
 
-        renderizarDashboard();
-    }
-
-    function logout() { location.reload(); }
-
-    function alterarFiltroDiretoria(val) {
-        // Só Admin consegue usar isso
-        usuarioLogado.view = val;
-        renderizarDashboard();
-    }
-
-    // =================================================================
-    // RENDERIZAÇÃO
-    // =================================================================
-
-    function renderizarDashboard() {
-        let dados;
-
-        // Filtra pela visão do usuário (ou seleção do admin)
-        if (usuarioLogado.view === 'TODOS') {
-            dados = [...dadosBanco];
-        } else {
-            dados = dadosBanco.filter(d => d.diretoria === usuarioLogado.view);
-        }
-
-        // Ordenação
-        dados.sort((a,b) => {
-            let vA = a[ordenacao.col], vB = b[ordenacao.col];
-            if(typeof vA === 'string') return ordenacao.dir==='asc' ? vA.localeCompare(vB) : vB.localeCompare(vA);
-            return ordenacao.dir==='asc' ? vA - vB : vB - vA;
-        });
-
-        // KPIs
-        let total=0, pend=0, atrasado=0, conc=0;
-        dados.forEach(d => {
-            total += d.anomalias;
-            if(d.status==='Pendente') pend+=d.anomalias;
-            else if(d.status==='Atrasado') atrasado+=d.anomalias;
-            else conc+=d.anomalias;
-        });
-        document.getElementById('kpiTotal').innerText = total;
-        document.getElementById('kpiPendente').innerText = pend;
-        document.getElementById('kpiAtrasado').innerText = atrasado;
-        document.getElementById('kpiConcluido').innerText = conc;
-
-        // Tabela
-        const tbody = document.getElementById('tabelaCorpo');
-        tbody.innerHTML = '';
-        dados.forEach(d => {
-            let bg = d.status==='Em Dia'?'bg-concluido':(d.status==='Atrasado'?'bg-atrasado':(d.status==='Concluído'?'bg-concluido':'bg-pendente'));
-            // O truque para o botão funcionar é passar o objeto 'd' corretamente
-            // Vamos usar uma função auxiliar para evitar erros de aspas no HTML
-            let tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><strong>${d.filial}</strong></td>
-                <td><a class="link-nome" onclick='prepararModal(${JSON.stringify(d).replace(/'/g, "&#39;")})'>${d.responsavel}</a></td>
-                <td style="text-align:center;">${d.anomalias}</td>
-                <td style="text-align:center;">${d.planos}</td>
-                <td style="text-align:center;"><span class="badge ${bg}">${d.status}</span></td>
-                <td><button onclick='prepararModal(${JSON.stringify(d).replace(/'/g, "&#39;")})' style="cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px;">🔍 Ver</button></td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        renderizarGraficos(dados);
-    }
-
-    function renderizarGraficos(dados) {
-        let statusMap = {'Pendente':0, 'Atrasado':0, 'Concluído':0};
-        dados.forEach(d => {
-            let s = (d.status==='Em Dia' || d.status==='Concluído') ? 'Concluído' : d.status;
-            statusMap[s] += d.anomalias;
-        });
-
-        let ctxS = document.getElementById('chartStatus').getContext('2d');
-        if(window.chartS instanceof Chart) window.chartS.destroy();
-        window.chartS = new Chart(ctxS, {
-            type: 'doughnut',
-            data: {
-                labels: Object.keys(statusMap),
-                datasets: [{ data: Object.values(statusMap), backgroundColor: ['#dc3545','#fd7e14','#28a745'] }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text:'Status Geral'} } }
-        });
-
-        let top = [...dados].sort((a,b) => b.anomalias - a.anomalias).slice(0, 5);
-        let ctxR = document.getElementById('chartResponsavel').getContext('2d');
-        if(window.chartR instanceof Chart) window.chartR.destroy();
-        window.chartR = new Chart(ctxR, {
-            type: 'bar',
-            data: {
-                labels: top.map(d => d.responsavel.split(' ')[0]),
-                datasets: [{ label: 'Qtd', data: top.map(d => d.anomalias), backgroundColor: '#0056b3' }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Ofensores'} } }
-        });
-    }
-
-    function ordenar(col) {
-        ordenacao.dir = (ordenacao.col === col && ordenacao.dir === 'desc') ? 'asc' : 'desc';
-        ordenacao.col = col;
-        renderizarDashboard();
-    }
-
-    // Função Intermediária para lidar com o click
-    function prepararModal(item) {
-        abrirDetalhes(item);
-    }
-
-    function abrirDetalhes(item) {
-        document.getElementById('modalTitulo').innerText = item.responsavel;
-        document.getElementById('modalSubtitulo').innerText = `${item.filial} | ${item.diretoria}`;
-        const tbody = document.getElementById('modalCorpo');
-        tbody.innerHTML = '';
-        
-        item.detalhes.forEach(det => {
-            // AQUI ESTAVA O ERRO: dt em vez de data, st em vez de status
-            let dataExibicao = det.dt || det.data; // Tenta dt (novo) ou data (antigo)
-            let statusExibicao = det.st || det.status;
+            // 1. Segurança e Riscos (Prioridade Alta)
+            if (d.includes('queda') || d.includes('risco') || d.includes('strech') || d.includes('segurança') || d.includes('doca')) return 'Risco de Segurança / Queda';
             
-            let badgeClass = statusExibicao==='Pendente'?'bg-pendente':(statusExibicao==='Concluído'?'bg-concluido':'bg-atrasado');
-            let tr = `<tr>
-                <td>${dataExibicao}</td>
-                <td><span class="badge ${badgeClass}">${statusExibicao}</span></td>
-                <td><span class="cat-tag">${det.cat}</span></td>
-                <td style="color:#666;">${det.desc}</td>
-            </tr>`;
-            tbody.innerHTML += tr;
-        });
-        document.getElementById('detalhesModal').style.display = 'block';
-    }
+            // 2. Pragas e Limpeza
+            if (d.includes('roedor') || d.includes('praga') || d.includes('sujeira') || d.includes('limpeza') || d.includes('higiene')) return 'Controle de Pragas / Higiene';
 
-    function fecharModal() { document.getElementById('detalhesModal').style.display = 'none'; }
-    window.onclick = function(e) { if(e.target == document.getElementById('detalhesModal')) fecharModal(); }
+            // 3. Divergências (Faltas e Sobras)
+            if (d.includes('diverg') || d.includes('falta') || d.includes('sobra') || d.includes('contagem') || d.includes('inventário') || d.includes('estoque')) return 'Divergência de Estoque';
+
+            // 4. Vencimentos (FEFO)
+            if (d.includes('venc') || d.includes('fefo') || d.includes('validade') || d.includes('prazo')) return 'Produto Vencido / FEFO';
+
+            // 5. Avarias Físicas
+            if (d.includes('avaria') || d.includes('quebra') || d.includes('danificado') || d.includes('derretido') || d.includes('consumo')) return 'Avaria / Danos';
+
+            // 6. Problemas Fiscais e Financeiros
+            if (d.includes('fiscal') || d.includes('boleto') || d.includes('pagamento') || d.includes('título') || d.includes('cap') || d.includes('car')) return 'Pendência Financeira / Fiscal';
+
+            // 7. Devoluções e Trocas
+            if (d.includes('devol') || d.includes('troca') || d.includes('recus') || d.includes('retorno')) {
+                if (d.includes('nf')) return 'Divergência em NF de Troca';
+                return 'Devolução de Cliente';
+            }
+
+            // 8. Se não achar nada específico, tenta categorizar por palavras soltas ou mantém genérico
+            if (d.includes('nota') || d.includes('nf')) return 'Pendência de Nota Fiscal';
+            
+            return 'Processo Operacional'; // Nome mais bonito que "Outros"
+        }
+
+        function handleEnter(e) { if(e.key==='Enter') fazerLogin(); }
+
+        function fazerLogin() {
+            const u = document.getElementById('user').value.toLowerCase().trim();
+            const p = document.getElementById('pass').value;
+            
+            if(CREDENCIAIS[u] && CREDENCIAIS[u].pass === p) {
+                acessar(CREDENCIAIS[u]);
+            } else {
+                document.getElementById('errorMsg').style.display='block';
+            }
+        }
+
+        function acessar(user) {
+            usuarioLogado = user;
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            document.getElementById('userBadge').innerText = user.name;
+
+            const selDir = document.getElementById('filtroDiretoria');
+            selDir.innerHTML = `<option value="TODOS">-- Visão Geral --</option><option value="Logistica">Logística</option><option value="Comercial">Comercial</option><option value="Gente">Gente e Gestão</option><option value="Financeiro">Financeiro</option><option value="Prevencao">Prevenção</option>`;
+            selDir.value = user.view;
+            
+            if(user.view !== 'TODOS') {
+                selDir.disabled = true; 
+                selDir.style.background = '#eee';
+            }
+
+            renderizarDashboard();
+        }
+
+        function logout() { location.reload(); }
+        function alterarFiltroDiretoria(val) { usuarioLogado.view = val; renderizarDashboard(); }
+
+        function renderizarDashboard() {
+            let dados;
+            if (usuarioLogado.view === 'TODOS') dados = [...dadosBanco];
+            else dados = dadosBanco.filter(d => d.diretoria === usuarioLogado.view);
+
+            dados.sort((a,b) => {
+                let vA = a[ordenacao.col], vB = b[ordenacao.col];
+                if(typeof vA === 'string') return ordenacao.dir==='asc' ? vA.localeCompare(vB) : vB.localeCompare(vA);
+                return ordenacao.dir==='asc' ? vA - vB : vB - vA;
+            });
+
+            let total=0, pend=0, atrasado=0, conc=0;
+            dados.forEach(d => {
+                total += d.anomalias;
+                if(d.status==='Pendente') pend+=d.anomalias;
+                else if(d.status==='Atrasado') atrasado+=d.anomalias;
+                else conc+=d.anomalias;
+            });
+            document.getElementById('kpiTotal').innerText = total;
+            document.getElementById('kpiPendente').innerText = pend;
+            document.getElementById('kpiAtrasado').innerText = atrasado;
+            document.getElementById('kpiConcluido').innerText = conc;
+
+            const tbody = document.getElementById('tabelaCorpo');
+            tbody.innerHTML = '';
+            dados.forEach(d => {
+                let bg = d.status==='Em Dia'?'bg-concluido':(d.status==='Atrasado'?'bg-atrasado':(d.status==='Concluído'?'bg-concluido':'bg-pendente'));
+                // TRUQUE: Substitui aspas simples por código HTML para não quebrar o botão
+                let jsonItem = JSON.stringify(d).replace(/'/g, "&#39;");
+                
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${d.filial}</strong></td>
+                    <td><a class="link-nome" onclick='prepararModal(${jsonItem})'>${d.responsavel}</a></td>
+                    <td style="text-align:center;">${d.anomalias}</td>
+                    <td style="text-align:center;">${d.planos}</td>
+                    <td style="text-align:center;"><span class="badge ${bg}">${d.status}</span></td>
+                    <td><button onclick='prepararModal(${jsonItem})' style="cursor:pointer; border:1px solid #ccc; background:#fff; border-radius:4px;">🔍 Ver</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            renderizarGraficos(dados);
+        }
+
+        function renderizarGraficos(dados) {
+            // 1. Status
+            let statusMap = {'Pendente':0, 'Atrasado':0, 'Concluído':0};
+            
+            // 2. Motivos (Agora usando a função inteligente)
+            let motivosMap = {};
+
+            dados.forEach(d => {
+                let s = (d.status==='Em Dia' || d.status==='Concluído') ? 'Concluído' : d.status;
+                statusMap[s] += d.anomalias;
+
+                // Classifica cada detalhe
+                d.detalhes.forEach(det => {
+                    // Usa a função classificarMotivo na descrição para encontrar a causa real
+                    let motivoReal = classificarMotivo(det.desc);
+                    motivosMap[motivoReal] = (motivosMap[motivoReal] || 0) + 1;
+                });
+            });
+
+            // Ordenar Motivos
+            let topMotivos = Object.entries(motivosMap).sort((a,b) => b[1] - a[1]).slice(0, 5);
+            
+            // Ordenar Ofensores
+            let topOfensores = [...dados].sort((a,b) => b.anomalias - a.anomalias).slice(0, 5);
+
+            // --- Gráfico 1: Status ---
+            let ctxS = document.getElementById('chartStatus').getContext('2d');
+            if(window.chartS instanceof Chart) window.chartS.destroy();
+            window.chartS = new Chart(ctxS, {
+                type: 'doughnut',
+                data: { labels: Object.keys(statusMap), datasets: [{ data: Object.values(statusMap), backgroundColor: ['#dc3545','#fd7e14','#28a745'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { title: {display:true, text:'Status Geral'} } }
+            });
+
+            // --- Gráfico 2: Responsáveis ---
+            let ctxR = document.getElementById('chartResponsavel').getContext('2d');
+            if(window.chartR instanceof Chart) window.chartR.destroy();
+            window.chartR = new Chart(ctxR, {
+                type: 'bar',
+                data: { labels: topOfensores.map(d => d.responsavel.split(' ')[0]), datasets: [{ label: 'Qtd', data: topOfensores.map(d => d.anomalias), backgroundColor: '#0056b3' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Ofensores'} } }
+            });
+
+            // --- Gráfico 3: Motivos (Inteligente) ---
+            // Verifica se o canvas existe na Parte 1 (se não existir, não quebra)
+            let canvasM = document.getElementById('chartMotivos');
+            if (canvasM) {
+                let ctxM = canvasM.getContext('2d');
+                if(window.chartM instanceof Chart) window.chartM.destroy();
+                window.chartM = new Chart(ctxM, {
+                    type: 'bar',
+                    data: { 
+                        labels: topMotivos.map(m => m[0]), 
+                        datasets: [{ 
+                            label: 'Ocorrências', 
+                            data: topMotivos.map(m => m[1]), 
+                            backgroundColor: '#17a2b8', 
+                            borderRadius: 4 
+                        }] 
+                    },
+                    options: { 
+                        indexAxis: 'y', 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        plugins: { legend: {display:false}, title: {display:true, text:'Top 5 Motivos (Causa Raiz)'} } 
+                    }
+                });
+            }
+        }
+
+        function ordenar(col) { ordenacao.dir = (ordenacao.col === col && ordenacao.dir === 'desc') ? 'asc' : 'desc'; ordenacao.col = col; renderizarDashboard(); }
+        
+        function prepararModal(item) { abrirDetalhes(item); }
+
+        function abrirDetalhes(item) {
+            document.getElementById('modalTitulo').innerText = item.responsavel;
+            document.getElementById('modalSubtitulo').innerText = `${item.filial} | ${item.diretoria}`;
+            const tbody = document.getElementById('modalCorpo');
+            tbody.innerHTML = '';
+            
+            item.detalhes.forEach(det => {
+                let dt = det.dt || det.data;
+                let st = det.st || det.status;
+                
+                // Aplica a mesma classificação inteligente no modal também
+                let motivoInteligente = classificarMotivo(det.desc);
+
+                let badgeClass = st==='Pendente'?'bg-pendente':(st==='Concluído'?'bg-concluido':'bg-atrasado');
+                let tr = `<tr>
+                    <td>${dt}</td>
+                    <td><span class="badge ${badgeClass}">${st}</span></td>
+                    <td><span class="cat-tag">${motivoInteligente}</span></td>
+                    <td style="color:#666; font-size:12px;">${det.desc}</td>
+                </tr>`;
+                tbody.innerHTML += tr;
+            });
+            document.getElementById('detalhesModal').style.display = 'block';
+        }
+
+        function fecharModal() { document.getElementById('detalhesModal').style.display = 'none'; }
+        window.onclick = function(e) { if(e.target == document.getElementById('detalhesModal')) fecharModal(); }
+
 </script>
 </body>
 </html>
